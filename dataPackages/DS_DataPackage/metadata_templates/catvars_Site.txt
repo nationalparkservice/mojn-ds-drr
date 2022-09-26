@@ -1,0 +1,43 @@
+attributeName	code	definition
+SiteStatus	T-S	Target - Sampled
+SiteStatus	T-NS	Target - Not Sampled
+SiteStatus	N-T	Non-Target
+SiteStatus	NE	Not Evaluated
+SiteStatus	NA	Not Applicable
+Park	CAMO	Castle Mountains National Monument
+Park	DEVA	Death Valley National Park
+Park	GRBA	Great Basin National Park
+Park	JOTR	Joshua Tree National Park
+Park	LAKE	Lake Mead National Recreation Area
+Park	MANZ	Manzanar National Historic Site
+Park	MOJA	Mojave National Preserve
+Park	PARA	Grand Canyon-Parashant National Monument
+Park	TUSK	Tule Springs Fossil Beds National Monument
+Subunit	QuMou	Queen Mountains
+Subunit	PiMou	Pinto Mountains
+Subunit	CoxMo	Coxcomb Mountains
+Subunit	PiBas	Pinto Basin
+Subunit	HeMou	Hexie Mountains
+Subunit	QuVal	Queen Valley
+Subunit	EuPCo	LSB- Eureka Peak Complex
+Subunit	PlVal	Pleasant Valley
+Subunit	CoJFC	Covington/Juniper Flats Complex
+Subunit	QuMoC	Quail Mountain Complex
+Subunit	BeCCo	LSB- Berdoo Canyon Complex
+Subunit	EaMou	Eagle Mountains
+Subunit	CotMo	Cottonwood Mountains
+Subunit	JOTRUK	JOTR Unknown
+Subunit	CAMOUK	CAMO Unknown
+Subunit	DEVAUK	DEVA Unknown
+Subunit	GRBAUK	GRBA Unknown
+Subunit	LAKEUK	LAKE Unknown
+Subunit	Entire	MANZ All Area
+Subunit	MOJAUK	MOJA Unknown
+Subunit	PARAUK	PARA Unknown
+GRTSDraw	DEVA1	Death Valley 1
+GRTSDraw	JOTR1	Joshua Tree 1
+GRTSDraw	LAKE2	Lake Mead 2 - Black Canyon Excluded
+GRTSDraw	LAKE4BC	Lake Mead 4 - Black Canyon Only
+GRTSDraw	MOJA1	Mojave 1
+GRTSDraw	PARA1	Parashant 1
+GRTSDraw	NA	Not Applicable

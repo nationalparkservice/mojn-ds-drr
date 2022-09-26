@@ -1,0 +1,15 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+CalibrationDate	Date of calibration	Date	NA	YYYY-MM-DD	Empty string	Not applicable or data not collected
+CalibrationTime	Time of calibration	character	NA	HH:MM:SS	Empty string	Not applicable or data not collected
+VisitTime	Time that the monitoring occurred	NA	NA	YYYY-MM-DD	Empty string	Not applicable or data not collected
+VisitDate	Date that the monitoring occured	Date	NA	HH:MM:SS	Empty string	Not applicable or data not collected
+StandardValue_microS_per_cm	Standard value of Specific Conductivity solution in microsiemens per cm	numeric	microsiemensPerCentimeter	NA	Empty string	Not applicable or data not collected
+PreCalibrationReading_microS_per_cm	Pre-calibration Specific Conductivity reading in microsiemens per cm	numeric	microsiemensPerCentimeter	NA	Empty string	Not applicable or data not collected
+PostCalibrationReading_microS_per_cm	Post-calibration Specific Conductivity reading in microsiemens per cm	numeric	microsiemensPerCentimeter	NA	Empty string	Not applicable or data not collected
+SpCondInstrument	Name of water quality instrument (instrument being calibrated)	character	NA	NA	Empty string	Not applicable or data not collected
+Notes	Notes about this calibration	character	NA	NA	Empty string	Not applicable or data not collected
+Park	Four letter park code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteCode	Unique alphanumeric site code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteName	Descriptive name of the site	character	NA	NA	Empty string	Not applicable or data not collected
+FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character	NA	NA	Empty string	Not applicable or data not collected
+VisitType	Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown	character	NA	NA	Empty string	Not applicable or data not collected

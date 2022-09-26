@@ -1,0 +1,80 @@
+attributeName	code	definition
+USDAPlantsCode	ACCA34	Achnatherum capense
+USDAPlantsCode	ARDO4	Arundo donax
+USDAPlantsCode	AVFA	Avena fatua
+USDAPlantsCode	BRDI3	Bromus diandrus
+USDAPlantsCode	BRRU2	Bromus rubens
+USDAPlantsCode	BRTE	Bromus tectorum
+USDAPlantsCode	COSE4	Cortaderia selloana
+USDAPlantsCode	CYDA	Cynodon dactylon
+USDAPlantsCode	HORDE	Hordeum spp
+USDAPlantsCode	PECI	Pennisetum ciliare
+USDAPlantsCode	PESE3	Pennisetum setaceum
+USDAPlantsCode	POMO5	Polypogon monspeliensis
+USDAPlantsCode	SARA3	Saccharum ravennae
+USDAPlantsCode	SCHIS	Schismus spp
+USDAPlantsCode	SOHA	Sorghum halepense
+USDAPlantsCode	LACA2	Lantana camara
+USDAPlantsCode	NEOL	Nerium oleander
+USDAPlantsCode	SPJU2	Spartium junceum
+USDAPlantsCode	VIAG	Vitex agnus-castus
+USDAPlantsCode	AIAL	Ailanthus altissima
+USDAPlantsCode	ELAN	Elaeagnus angustifolia
+USDAPlantsCode	NIGL	Nicotiana glauca
+USDAPlantsCode	PHDA4	Phoenix dactylifera
+USDAPlantsCode	TARA	Tamarix ramosissima
+USDAPlantsCode	TAAP	Tamarix aphylla
+USDAPlantsCode	WAFI	Washingtonia filifera
+USDAPlantsCode	ACRE3	Acroptilon repens
+USDAPlantsCode	BAHY	Bassia hyssopifolia
+USDAPlantsCode	BASC5	Bassia scoparia
+USDAPlantsCode	BRTO	Brassica tournefortii
+USDAPlantsCode	CADR	Cardaria draba
+USDAPlantsCode	CANU4	Carduus nutans
+USDAPlantsCode	CEME2	Centaurea melitensis
+USDAPlantsCode	CESO3	Centaurea solstitialis
+USDAPlantsCode	CESTM	Centaurea stoebe ssp. micranthos
+USDAPlantsCode	CIAR4	Cirsium arvense
+USDAPlantsCode	CIVU	Cirsium vulgare
+USDAPlantsCode	COAR4	Convolvulus arvensis
+USDAPlantsCode	ERCI6	Erodium cicutarium
+USDAPlantsCode	ERVES	Eruca vesicaria ssp. sativa
+USDAPlantsCode	EUES	Euphorbia esula
+USDAPlantsCode	HAGL	Halogeton glomeratus
+USDAPlantsCode	LASE	Lactuca serriola
+USDAPlantsCode	LELA2	Lepidium latifolium
+USDAPlantsCode	LYSA2	Lythrum salicaria
+USDAPlantsCode	MAAF	Malcolmia africana
+USDAPlantsCode	ONAC	Onopordum acanthium
+USDAPlantsCode	SATR12	Salsola tragus
+USDAPlantsCode	SIAL2	Sisymbrium altissimum
+USDAPlantsCode	SIIR	Sisymbrium irio
+USDAPlantsCode	SIOR4	Sisymbrium orientale
+USDAPlantsCode	SOOL	Sonchus oleraceus
+USDAPlantsCode	TRTE	Tribulus terrestris
+USDAPlantsCode	UNK	_unknown species
+USDAPlantsCode	AGST2	Agrostis stolonifera
+USDAPlantsCode	BROMU	Bromus spp
+InvasivesObserved	Y	Yes
+InvasivesObserved	N	No
+InvasivesObserved	ND	No Data
+Park	CAMO	Castle Mountains National Monument
+Park	DEVA	Death Valley National Park
+Park	GRBA	Great Basin National Park
+Park	JOTR	Joshua Tree National Park
+Park	LAKE	Lake Mead National Recreation Area
+Park	MANZ	Manzanar National Historic Site
+Park	MOJA	Mojave National Preserve
+Park	PARA	Grand Canyon-Parashant National Monument
+Park	TUSK	Tule Springs Fossil Beds National Monument
+ProtectedStatus	LP	Legally Protected
+ProtectedStatus	OP	Operationally Protected
+ProtectedStatus	NP	Not Protected
+ProtectedStatus	NA	Not Available
+InRiparianVegBuffer	Y	Yes
+InRiparianVegBuffer	N	No
+InRiparianVegBuffer	ND	No Data
+InRiparianVegBuffer	NA	Not Applicable
+DPL	Accepted	Data that have undergone all QA and QC procedures as defined in a published protocol and associated SOPs. Used in cases where a Quality Assurance Plan has not been developed and approved.
+DPL	Provisional	Data that have undergone all planned QA procedures, have been entered into the system of record, and have passed verification procedures to ensure that data in the system of record match source data (field forms, sensor data files, etc.). Provisional data have not undergone all QC procedures
+DPL	Raw	Data in their state of original collection, either in the form of paper or electronic field forms, eletronic sensor files, or digital media(photo, video, or audio). These data generally have been collected following some QA procedures, but have not undergone any QC procedures.

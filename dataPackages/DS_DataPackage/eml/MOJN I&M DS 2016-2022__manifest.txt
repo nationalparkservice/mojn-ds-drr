@@ -1,0 +1,60 @@
+This data package was produced by the National Park Service (NPS) Inventory and Monitoring Division and can be downloaded from the [NPS Data Store](https://irma.nps.gov/DataStore/Reference/Profile/).
+These data are provided under the Creative Commons CC0 1.0 “No Rights Reserved” (see: https://creativecommons.org/publicdomain/zero/1.0/).
+ 
+DATA PRODUCT INFORMATION
+------------------------
+ 
+ID:  Data Store Code.
+ 
+Title: MOJN I&M Desert Springs Data Package 2016-2022
+ 
+Description: MOJN I&M DS 2016-2022
+ 
+Abstract: This report summarizes data quality evaluations of discrete data collected for the Mojave Desert Network Inventory and Monitoring Program (MOJN I&M) Desert Springs (DS) protocol from 2016 to 2022. This protocol is designed to monitor hydrological and ecological condition at 250 springs in Death Valley National Park (DEVA), Joshua Tree National Park (JOTR), Lake Mead National Recreation Area (LAKE), Mojave National Preserve (MOJA), and Grand Canyon-Parashant National Monument (PARA). Data collected include water quantity and water quality measurements as well as site condition information about dominant vegetation, invasive plants, disturbance, and wildlife evidence.
+ 
+Brief Study Area Description: MOJN Desert Springs Monitoring
+ 
+Keywords: ecological monitoring, long-term monitoring, ecological data, national parks 
+ 
+Date for Data Publication: 2022-09-21
+This zip package was generated on: 2022-09-21
+ 
+DATA PACKAGE CONTENTS
+------------------------
+ 
+This zip package contains the following documentation files:
+ 
+- This readme file: C:/Users/sierramoore/Documents/R/mojn-ds-drr/dataPackages/DS_DataPackage/eml/MOJN I&M DS 2016-2022__manifest.txt
+- Machine-readable metadata file describing the data set(s): MOJN I&M DS 2016-2022__metadata.xml. This file uses the Ecological Metadata Language (EML) schema. Learn more about this format at https://knb.ecoinformatics.org/external//emlparser/docs/eml-2.1.1/index.html#N1022A.
+ 
+This zip package contains the following data set(s):
+ 
+MOJN I&M DS 2016-2022__data.zip 
+ 
+ADDITIONAL INFORMATION
+------------------------
+ 
+Primary related products: The following product(s) were created concurrently with this dataset:
+ 
+1. Data Release Report. Document describing the methods and the analysis code used to generate data set. Available at https://irma.nps.gov/DataStore/Reference/Profile/.
+ 
+CHANGE LOG
+------------------------
+ 
+N/A
+ 
+ADDITIONAL REMARKS
+------------------------
+ 
+N/A
+ 
+NPS DATA POLICY AND CITATION GUIDELINES
+------------------------
+ 
+See NPS Inventory and Monitoring Division's data policy and citation guidelines at https://irma.nps.gov/content/portal/about/.
+ 
+DATA QUALITY AND VERSIONING
+------------------------
+ 
+The data contained in this file are considered Accepted under the IMD Data Certification Guidance (https://www.google.com/url?q=https://irma.nps.gov/DataStore/Reference/Profile/2227397). Updates to the data, QA/QC and/or processing algorithms over time will occur on an as-needed basis.  Please check back to this site for updates tracked in change logs.
+ 

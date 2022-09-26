@@ -1,0 +1,18 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+CalibrationTime	Time of calibration	character	NA	YYYY-MM-DD	Empty string	Not applicable or data not collected
+CalibrationDate	Date of calibration	Date	NA	HH:MM:SS	Empty string	Not applicable or data not collected
+VisitTime	Time that the monitoring occurred	NA	NA	YYYY-MM-DD	Empty string	Not applicable or data not collected
+VisitDate	Date that the monitoring occured	Date	NA	HH:MM:SS	Empty string	Not applicable or data not collected
+StandardValue_pH	Standard value of pH solution	numeric	dimensionless	NA	Empty string	Not applicable or data not collected
+TemperatureCorrectedStd_pH	Temperature-corrected standard value of pH solution (only applies to some instruments)	numeric	dimensionless	NA	Empty string	Not applicable or data not collected
+PreCalibrationReading_pH	Pre-calibration pH value	numeric	dimensionless	NA	Empty string	Not applicable or data not collected
+PreCalibrationTemperature_C	Pre-calibration temperature in C	numeric	celsius	NA	Empty string	Not applicable or data not collected
+PostCalibrationReading_pH	Post-calibration pH value	numeric	dimensionless	NA	Empty string	Not applicable or data not collected
+PostCalibrationTemperature_C	Post-calibration temperature in C	numeric	dimensionless	NA	Empty string	Not applicable or data not collected
+pHInstrument	Name of water quality instrument (instrument being calibrated)	character	NA	NA	Empty string	Not applicable or data not collected
+Notes	Notes about this calibration	character	NA	NA	Empty string	Not applicable or data not collected
+Park	Four letter park code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteCode	Unique alphanumeric site code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteName	Descriptive name of the site	character	NA	NA	Empty string	Not applicable or data not collected
+FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character	NA	NA	Empty string	Not applicable or data not collected
+VisitType	Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown	character	NA	NA	Empty string	Not applicable or data not collected

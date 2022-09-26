@@ -1,0 +1,17 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+Park	Four letter park code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteCode	Unique alphanumeric site code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteName	Descriptive name of the site	character	NA	NA	Empty string	Not applicable or data not collected
+VisitDate	Date that the monitoring occured	Date	NA	NA	Empty string	Not applicable or data not collected
+FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character	NA	NA	Empty string	Not applicable or data not collected
+IsVegetationObserved	Indicates whether riparian vegetation was observed at a spring	character	NA	NA	Empty string	Not applicable or data not collected
+MistletoePresent	Indicates whether mistletoe was observed at the spring	character	NA	NA	Empty string	Not applicable or data not collected
+LifeForm	Type of riparian vegetation, split into broad and easily identifiable classes	character	NA	NA	Empty string	Not applicable or data not collected
+Rank	Integer indicating relative canopy cover of vegetation life form. 1 indicates greatest canopy cover. Ties are allowed.	numeric	NA	NA	Empty string	Not applicable or data not collected
+DominantSpecies	Text description or name of the dominant species	character	NA	NA	Empty string	Not applicable or data not collected
+USDAPlantsCode	USDA plant code assigned to taxon	NA	NA	NA	Empty string	Not applicable or data not collected
+ScientificName	Species scientific name	NA	NA	NA	Empty string	Not applicable or data not collected
+VisitType	Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown	character	NA	NA	Empty string	Not applicable or data not collected
+ProtectedStatus	Protected status of data record	NA	NA	NA	Empty string	Not applicable or data not collected
+DPL	Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]	character	NA	NA	Empty string	Not applicable or data not collected
+Notes	Additional notes about the riparian vegetation	character	NA	NA	Empty string	Not applicable or data not collected

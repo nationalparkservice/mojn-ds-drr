@@ -1,0 +1,16 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+Park	Four letter park code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteCode	Unique alphanumeric site code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteName	Descriptive name of the site	character	NA	NA	Empty string	Not applicable or data not collected
+VisitDate	Date that the monitoring occured	Date	NA	YYYY-MM-DD	Empty string	Not applicable or data not collected
+FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character	NA	NA	Empty string	Not applicable or data not collected
+FlowCondition	Flow condition at time of visit	character	NA	NA	Empty string	Not applicable or data not collected
+ModificationType	Type of modification to natural spring flow	NA	NA	NA	Empty string	Not applicable or data not collected
+SpringbrookType	Short code/abbreviation for the type of springbrook	character	NA	NA	Empty string	Not applicable or data not collected
+SringbrookLengthFlag	Indicates whether springbrook length is greater than reported length	NA	NA	NA	Empty string	Not applicable or data not collected
+SpringbrookLength_m	Length of springbrook in meters	numeric	meter	NA	Empty string	Not applicable or data not collected
+SpringbrookWidth_m	Width of springbrook in meters	numeric	meter	NA	Empty string	Not applicable or data not collected
+VisitType	Indicates whether discontinuous springbrook length is greater than reported length	character	NA	NA	Empty string	Not applicable or data not collected
+Notes	Additional Notes about discharge flow condition at this location	character	NA	NA	Empty string	Not applicable or data not collected
+DPL	Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]	character	NA	NA	Empty string	Not applicable or data not collected
+SpringbrookNotes	Notes about the springbrook channel characteristics	character	NA	NA	Empty string	Not applicable or data not collected

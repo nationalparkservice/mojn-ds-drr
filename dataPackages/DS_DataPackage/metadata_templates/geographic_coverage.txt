@@ -1,0 +1,2 @@
+geographicDescription	northBoundingCoordinate	southBoundingCoordinate	eastBoundingCoordinate	westBoundingCoordinate
+MOJN Desert Springs Monitoring	39.13129	33.65772	-113.15745	-118.16453

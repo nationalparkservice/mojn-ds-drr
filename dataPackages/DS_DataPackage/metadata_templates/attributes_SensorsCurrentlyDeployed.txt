@@ -1,0 +1,10 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+SensorNumber	Sensor model number	numeric	number	NA	Empty string	Not applicable or data not collected
+SerialNumber	Sensor serial number	character	NA	NA	Empty string	Not applicable or data not collected
+SiteCode	Unique alphanumeric site code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteName	Descriptive name of the site	character	NA	NA	Empty string	Not applicable or data not collected
+VisitDate	Date that the monitoring occured	Date	NA	YYYY-MM-DD	Empty string	Not applicable or data not collected
+FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character	NA	NA	Empty string	Not applicable or data not collected
+Park	Four letter park code	character	NA	NA	Empty string	Not applicable or data not collected
+VisitType	Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown	character	NA	NA	Empty string	Not applicable or data not collected
+Notes	Notes on the sensor deployment	character	NA	NA	Empty string	Not applicable or data not collected

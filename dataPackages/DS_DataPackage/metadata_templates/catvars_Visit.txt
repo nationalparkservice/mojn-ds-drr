@@ -1,0 +1,40 @@
+attributeName	code	definition
+MonitoringStatus	S	Sampled
+MonitoringStatus	NNS	Not sampled - No spring found
+MonitoringStatus	NI	Not sampled - Inaccessible
+MonitoringStatus	NUS	Not sampled - Unsafe
+MonitoringStatus	NRD	Not sampled - Resource damage risk
+MonitoringStatus	UNK	Unknown if sampled
+MonitoringStatus	NU	Not sampled - Unknown reason
+Park	CAMO	Castle Mountains National Monument
+Park	DEVA	Death Valley National Park
+Park	GRBA	Great Basin National Park
+Park	JOTR	Joshua Tree National Park
+Park	LAKE	Lake Mead National Recreation Area
+Park	MANZ	Manzanar National Historic Site
+Park	MOJA	Mojave National Preserve
+Park	PARA	Grand Canyon-Parashant National Monument
+Park	TUSK	Tule Springs Fossil Beds National Monument
+SpringType	Cave	Cave (Emerge entirely within a cave environment and not directly connected to surface flow.)
+SpringType	Lim	Limnocrene (Emerge as one or more lentic pools.)
+SpringType	Rhe	Rheocrene (Emerge as flowing streams.)
+SpringType	Mou	Mound-form (Emerge from (usually carbonate) precipitate mounds.)
+SpringType	Hel	Helocrene (Emerge usually in a diffuse fashion in cienega (marshy, wet meadow) settings.)
+SpringType	Hil	Hillslope (Emerge from non-vertical hillslopes at 30-60 degrees slope, and usually have indistinct or multiple sources.)
+SpringType	Gus	Gushette (Pour from cliff faces.)
+SpringType	Han	Hanging garden (Complex, multi-habitat springs emerge along geologic contacts and seep, drip, or pour onto underlying walls.)
+SpringType	Gey	Geyser (Geothermal springs that emerge explosively and usually erratically.)
+SpringType	Fou	Fountain (Cool-water artesian springs that are forced above the land surface by stratigraphic head-driven pressure.)
+SpringType	Exp	Exposure (Settings in which ground water is exposed at the surface but does not flow.)
+SpringType	Hyp	Hypocrene (Springs in which ground water never reaches the surface.)
+SpringType	Unk	Unknown (Spring type is unknown)
+SpringType	Tin	Tinaja (Usually small pool in rock basin that may be groundwater fed)
+SpringType	Oth	Other (Other spring type)
+VisitType	P	Primary monitoring visit
+VisitType	R	Replicate monitoring visit
+VisitType	T	Training monitoring visit
+VisitType	C	Crew calibration monitoring visit
+VisitType	S	Supplementary monitoring for a special concern
+DPL	Accepted	Data that have undergone all QA and QC procedures as defined in a published protocol and associated SOPs. Used in cases where a Quality Assurance Plan has not been developed and approved.
+DPL	Provisional	Data that have undergone all planned QA procedures, have been entered into the system of record, and have passed verification procedures to ensure that data in the system of record match source data (field forms, sensor data files, etc.). Provisional data have not undergone all QC procedures
+DPL	Raw	Data in their state of original collection, either in the form of paper or electronic field forms, eletronic sensor files, or digital media(photo, video, or audio). These data generally have been collected following some QA procedures, but have not undergone any QC procedures.

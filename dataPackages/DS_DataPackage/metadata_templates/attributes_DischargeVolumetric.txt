@@ -1,0 +1,12 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+Park	Four letter park code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteCode	Unique alphanumeric site code	character	NA	NA	Empty string	Not applicable or data not collected
+SiteName	Descriptive name of the site	character	NA	NA	Empty string	Not applicable or data not collected
+VisitDate	Date that the monitoring occured	Date	NA	YYYY-MM-DD	Empty string	Not applicable or data not collected
+FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character	NA	NA	Empty string	Not applicable or data not collected
+FlowCondition	Flow condition at time of visit	character	NA	NA	Empty string	Not applicable or data not collected
+ContainerVolume_mL	Volume of container used	numeric	milliliter	NA	Empty string	Not applicable or data not collected
+FillTime_seconds	How long it took for container to fill in seconds	numeric	second	NA	Empty string	Not applicable or data not collected
+EstimatedCapture_percent	Estimate of percentage of flow captured in container	numeric	percent	NA	Empty string	Not applicable or data not collected
+VisitType	Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown	character	NA	NA	Empty string	Not applicable or data not collected
+DPL	Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]	character	NA	NA	Empty string	Not applicable or data not collected
