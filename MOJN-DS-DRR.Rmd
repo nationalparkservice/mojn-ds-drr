@@ -555,30 +555,30 @@ if (params$isAccessible == "yes") {
 This table provides a list of springs that were visited multiple times during a field season. There should only be one primary visit per field season. Supplemental visits involve collecting specific data to supplement the data collected during the primary visit. Supplemental visits typically occur when a sensor is inadvertently forgotten during the primary visit and the spring is revisited later in the field season for sensor deployment. Replicate visits involve collecting a full set of data in addition to the data collected during the primary visit. Replicate visits may occur during training or when calibrating or comparing field crews.
 
 
-``` {r repeats}
-repeats <- qcRepeatVisits(conn = conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(repeats) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(repeats, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- repeats$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            resizable = TRUE,
-            compact = TRUE,
-            striped = TRUE)
-}
-```
+# ``` {r repeats}
+# repeats <- qcRepeatVisits(conn = conn, data.source = "database")
+# 
+# if (params$isAccessible == "yes") {
+#   knitr::kable(repeats) %>%
+#     kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
+# } else {
+#   reactable(dplyr::select(repeats, -Notes),
+#             defaultColDef = colDef(minWidth = 50),
+#             searchable = TRUE,
+#             details = colDef(
+#               name = "Notes",
+#               details = function(index) {
+#                 note <- repeats$Notes[index]
+#                 if (!is.na(note)) {
+#                   return(note)
+#                 }
+#               }
+#             ),
+#             resizable = TRUE,
+#             compact = TRUE,
+#             striped = TRUE)
+# }
+# ```
 
 
 ### Spring type discrepancies
@@ -654,46 +654,46 @@ if (params$isAccessible == "yes") {
 
 This table lists annual springs where a sensor was not deployed. If there is a visit date associated with the field season, then the spring was visited, but a sensor was not deployed during the visit. If there is no visit date associated with the field season, then the spring was not visited during that field season.
 
-``` {r nodeployment}
-nodata <- qcSensorsNotDeployed(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(nodata) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  nodata %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
-```
+# ``` {r nodeployment}
+# nodata <- qcSensorsNotDeployed(conn, data.source = "database")
+# 
+# if (params$isAccessible == "yes") {
+#   knitr::kable(nodata) %>%
+#     kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
+# } else {
+#   nodata %>%
+#     reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
+# }
+# ```
 
 ### Sensors not recovered
 
 This table lists springs where a sensor previously deployed was not recovered. If there is a visit date associated with the field season, then the spring was visited, but a sensor was not recovered during the visit. If there is no visit date associated with the field season, then the spring was not visited during that field season.
 
-``` {r noretrieval}
-nodata <- qcSensorsNotRecovered(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(nodata) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(nodata, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- nodata$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            resizable = TRUE,
-            compact = TRUE,
-            striped = TRUE)
-}
-```
+# ``` {r noretrieval}
+# nodata <- qcSensorsNotRecovered(conn, data.source = "database")
+# 
+# if (params$isAccessible == "yes") {
+#   knitr::kable(nodata) %>%
+#     kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
+# } else {
+#   reactable(dplyr::select(nodata, -Notes),
+#             defaultColDef = colDef(minWidth = 50),
+#             searchable = TRUE,
+#             details = colDef(
+#               name = "Notes",
+#               details = function(index) {
+#                 note <- nodata$Notes[index]
+#                 if (!is.na(note)) {
+#                   return(note)
+#                 }
+#               }
+#             ),
+#             resizable = TRUE,
+#             compact = TRUE,
+#             striped = TRUE)
+# }
+# ```
 
 ### Problems with recovered sensors
 
@@ -815,30 +815,30 @@ if (params$isAccessible == "yes") {
 
 This table lists sensors whose sensor ID or serial number are unknown.
 
-``` {r unknownsensorids}
-unkids <- qcUnknownSensorIDs(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(unkids) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(unkids, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- unkids$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            resizable = TRUE,
-            compact = TRUE,
-            striped = TRUE)
-}
-```
+# ``` {r unknownsensorids}
+# unkids <- qcUnknownSensorIDs(conn, data.source = "database")
+# 
+# if (params$isAccessible == "yes") {
+#   knitr::kable(unkids) %>%
+#     kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
+# } else {
+#   reactable(dplyr::select(unkids, -Notes),
+#             defaultColDef = colDef(minWidth = 50),
+#             searchable = TRUE,
+#             details = colDef(
+#               name = "Notes",
+#               details = function(index) {
+#                 note <- unkids$Notes[index]
+#                 if (!is.na(note)) {
+#                   return(note)
+#                 }
+#               }
+#             ),
+#             resizable = TRUE,
+#             compact = TRUE,
+#             striped = TRUE)
+# }
+# ```
 
 `r if(params$isAccessible == "yes") {"## Flow condition and water quantity"} else {"## Flow condition and water quantity {.tabset}"}`
 
@@ -1273,33 +1273,33 @@ if (params$isAccessible == "yes") {
 
 This table lists visits where dissolved oxygen percent was not calibrated to local dissolved oxygen. When calibrating to local dissolved oxygen, the calibration value is 100% regardless of the barometric pressure at the time of calibration. The 100% calibration value for this convention reflects the fact that the calibration environment is at 100% oxygen pressure for that specific location.
 
-``` {r docalcheck}
-localdo <- qcLocalDOCheck(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(localdo) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  localdo %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
-```
+# ``` {r docalcheck}
+# localdo <- qcLocalDOCheck(conn, data.source = "database")
+# 
+# if (params$isAccessible == "yes") {
+#   knitr::kable(localdo) %>%
+#     kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
+# } else {
+#   localdo %>%
+#     reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
+# }
+# ```
 
 ### Specific conductance standards
 
 This table lists visits where the specific conductance standard used during calibration was much lower than the in-situ reading of specific conductance at the spring. Ideally, specific conductance standards of 10,000 uS/cm or even 50,000 uS/cm should be used at springs with consistently higher specific conductance readings.
 
-``` {r spcondstandardcheck}
-scstandard <- qcSpCondStandardCheck(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(scstandard) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  scstandard %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
-```
+# ``` {r spcondstandardcheck}
+# scstandard <- qcSpCondStandardCheck(conn, data.source = "database")
+# 
+# if (params$isAccessible == "yes") {
+#   knitr::kable(scstandard) %>%
+#     kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
+# } else {
+#   scstandard %>%
+#     reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
+# }
+# ```
 
 ### Water quality summary statistics
 

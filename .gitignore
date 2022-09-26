@@ -5,3 +5,5 @@
 data/raw/
 data/final/
 dataPackages/DataPackageTemplate/*.nb.html
+dataPackages/DataPackageTemplate/metadata_templates/abstract.txt
+dataPackages/DataPackageTemplate/metadata_templates/methods.txt

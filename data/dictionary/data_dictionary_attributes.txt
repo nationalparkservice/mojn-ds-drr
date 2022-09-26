@@ -1,0 +1,275 @@
+tableName	attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+CalibrationDO	CalibrationTime	Time of calibration	Date		YYYY-MM-DD		
+CalibrationDO	CalibrationDate	Date of calibration	Date		HH:MM:SS		
+CalibrationDO	VisitDate	Time that the monitoring occurred	Date		YYYY-MM-DD		
+CalibrationDO	VisitTime	Date that the monitoring occured	Date		HH:MM:SS		
+CalibrationDO	PreCalibrationReading_percent	Pre-calibration dissolved oxygen reading in percent	numeric	percent			
+CalibrationDO	PreCalibrationTemperature_C	Pre-calibration temperature in C	numeric	celsius			
+CalibrationDO	PostCalibrationReading_percent	Post-calibration dissolved oxygen reading in percent	numeric	percent			
+CalibrationDO	PostCalibrationTemperature_C	Post-calibration temperature in C	numeric	celsius			
+CalibrationDO	BarometricPressure_mmHg	Barometric Pressure in mmHg	numeric	millimetersOfMercury			
+CalibrationDO	DOInstrument	Name of water quality instrument (instrument being calibrated)	character				
+CalibrationDO	Notes	Notes about this calibration	character				
+CalibrationDO	Park	Four letter park code	character				
+CalibrationDO	SiteCode	Unique alphanumeric site code	character				
+CalibrationDO	SiteName	Descriptive name of the site	character				
+CalibrationDO	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+CalibrationDO	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxilliary, Unknown"	character				
+CalibrationpH	CalibrationTime	Time of calibration	Date		YYYY-MM-DD		
+CalibrationpH	CalibrationDate	Date of calibration	Date		HH:MM:SS		
+CalibrationpH	VisitTime	Time that the monitoring occurred	Date		YYYY-MM-DD		
+CalibrationpH	VisitDate	Date that the monitoring occured	Date		HH:MM:SS		
+CalibrationpH	StandardValue_pH	Standard value of pH solution	numeric	dimensionless			
+CalibrationpH	TemperatureCorrectedStd_pH	Temperature-corrected standard value of pH solution (only applies to some instruments)	numeric	dimensionless			
+CalibrationpH	PreCalibrationReading_pH	Pre-calibration pH value	numeric	dimensionless			
+CalibrationpH	PreCalibrationTemperature_C	Pre-calibration temperature in C	numeric	celsius			
+CalibrationpH	PostCalibrationReading_pH	Post-calibration pH value	numeric	dimensionless			
+CalibrationpH	PostCalibrationTemperature_C	Post-calibration temperature in C	numeric	dimensionless			
+CalibrationpH	pHInstrument	Name of water quality instrument (instrument being calibrated)	character				
+CalibrationpH	Notes	Notes about this calibration	character				
+CalibrationpH	Park	Four letter park code	character				
+CalibrationpH	SiteCode	Unique alphanumeric site code	character				
+CalibrationpH	SiteName	Descriptive name of the site	character				
+CalibrationpH	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+CalibrationpH	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+CalibrationSpCond	CalibrationDate	Date of calibration	Date		YYYY-MM-DD		
+CalibrationSpCond	CalibrationTime	Time of calibration	Date		HH:MM:SS		
+CalibrationSpCond	VisitTime	Time that the monitoring occurred	Date		YYYY-MM-DD		
+CalibrationSpCond	VisitDate	Date that the monitoring occured	Date		HH:MM:SS		
+CalibrationSpCond	StandardValue_microS_per_cm	Standard value of Specific Conductivity solution in microsiemens per cm	numeric	microsiemensPerCentimeter			
+CalibrationSpCond	PreCalibrationReading_microS_per_cm	Pre-calibration Specific Conductivity reading in microsiemens per cm	numeric	microsiemensPerCentimeter			
+CalibrationSpCond	PostCalibrationReading_microS_per_cm	Post-calibration Specific Conductivity reading in microsiemens per cm	numeric	microsiemensPerCentimeter			
+CalibrationSpCond	SpCondInstrument	Name of water quality instrument (instrument being calibrated)	character				
+CalibrationSpCond	Notes	Notes about this calibration	character				
+CalibrationSpCond	Park	Four letter park code	character				
+CalibrationSpCond	SiteCode	Unique alphanumeric site code	character				
+CalibrationSpCond	SiteName	Descriptive name of the site	character				
+CalibrationSpCond	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+CalibrationSpCond	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+DischargeEstimated	Park	Four letter park code	character				
+DischargeEstimated	SiteCode	Unique alphanumeric site code	character				
+DischargeEstimated	SiteName	Descriptive name of the site	character				
+DischargeEstimated	VisitDate	Date that the monitoring occured	Date		YYYY-MM-DD		
+DischargeEstimated	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+DischargeEstimated	FlowCondition	Flow condition at time of visit	character				
+DischargeEstimated	DischargeClass_L_per_s	Estimated discharge range in liters per second	character				
+DischargeEstimated	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+DischargeEstimated	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
+DischargeFlowCondition	Park	Four letter park code	character				
+DischargeFlowCondition	SiteCode	Unique alphanumeric site code	character				
+DischargeFlowCondition	SiteName	Descriptive name of the site	character				
+DischargeFlowCondition	VisitDate	Date that the monitoring occured	Date		YYYY-MM-DD		
+DischargeFlowCondition	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+DischargeFlowCondition	FlowCondition	Flow condition at time of visit	character				
+DischargeFlowCondition	ModificationType	Type of modification to natural spring flow	character				
+DischargeFlowCondition	SpringbrookType	Short code/abbreviation for the type of springbrook	character				
+DischargeFlowCondition	SringbrookLengthFlag	Indicates whether springbrook length is greater than reported length	character				
+DischargeFlowCondition	SpringbrookLength_m	Length of springbrook in meters	numeric	meter			
+DischargeFlowCondition	SpringbrookWidth_m	Width of springbrook in meters	numeric	meter			
+DischargeFlowCondition	VisitType	Indicates whether discontinuous springbrook length is greater than reported length	character				
+DischargeFlowCondition	Notes	Additional Notes about discharge flow condition at this location	character				
+DischargeFlowCondition	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
+DischargeFlowCondition	SpringbrookNotes	Notes about the springbrook channel characteristics	character				
+DischargeVolumetric	Park	Four letter park code	character				
+DischargeVolumetric	SiteCode	Unique alphanumeric site code	character				
+DischargeVolumetric	SiteName	Descriptive name of the site	character				
+DischargeVolumetric	VisitDate	Date that the monitoring occured	Date		YYYY-MM-DD		
+DischargeVolumetric	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+DischargeVolumetric	FlowCondition	Flow condition at time of visit	character				
+DischargeVolumetric	ContainerVolume_mL	Volume of container used	numeric	milliliter			
+DischargeVolumetric	FillTime_seconds	How long it took for container to fill in seconds	numeric	second			
+DischargeVolumetric	EstimatedCapture_percent	Estimate of percentage of flow captured in container	numeric	percent			
+DischargeVolumetric	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+DischargeVolumetric	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
+Disturbance	Park	Four letter park code	character				
+Disturbance	SiteCode	Unique alphanumeric site code	character				
+Disturbance	SiteName	Descriptive name of the site	character				
+Disturbance	VisitDate	Date that the monitoring occured	Date		YYYY-MM-DD		
+Disturbance	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+Disturbance	Roads	Road disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	HumanUse	Human use disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	PlantManagement	Plant management disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	HikingTrails	Hiking trail disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	Livestock	Livestock disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	OtherAnthropogenic	Other anthropogenic disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	Fire	Fire disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	Flooding	Flooding disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	Wildlife	Wildlife disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	OtherNatural	Other natural disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	Overall	Overall disturbance percent class from lookup.DisturbanceClass	character				
+Disturbance	Notes	Additional notes about disturbance at this location	character				
+Disturbance	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+Disturbance	FlowModificationStatus	Indicates whether spring flow has been modified from its natural course	character				
+Disturbance	DPL	"Note for Level of data processing applied to this data [Raw, Provisional, Accepted, Certified] Status"	character				
+DisturbanceFlowModification	Park	Four letter park code	character				
+DisturbanceFlowModification	SiteCode	Unique alphanumeric site code	character				
+DisturbanceFlowModification	SiteName	Descriptive name of the site	character				
+DisturbanceFlowModification	VisitDate	Date that the monitoring occured	Date		YYYY-MM-DD		
+DisturbanceFlowModification	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+DisturbanceFlowModification	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+DisturbanceFlowModification	FlowModificationStatus	Indicates whether spring flow has been modified from its natural course	character				
+DisturbanceFlowModification	DPL	"Note for Level of data processing applied to this data [Raw, Provisional, Accepted, Certified] Status"	character				
+Invasives	Park	Four letter park code	character				
+Invasives	SiteCode	Unique alphanumeric site code	character				
+Invasives	SiteName	Descriptive name of the site	character				
+Invasives	VisitDate	Date that the monitoring occured	Date		YYYY-MM-DD		
+Invasives	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+Invasives	InvasivesObserved	Indicates whether invasive species were observed at a spring	character				
+Invasives	InRiparianVegBuffer	Indicates whether invasive species observation falls within or outside of riparian veg buffer	character				
+Invasives	USDAPlantsCode	USDA plant code assigned to taxon	character				
+Invasives	ProtectedStatus	Protected status of data record	character				
+Invasives	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
+Invasives	Notes	Additional notes about the invasive species	character				
+Riparian	Park	Four letter park code	character				
+Riparian	SiteCode	Unique alphanumeric site code	character				
+Riparian	SiteName	Descriptive name of the site	character				
+Riparian	VisitDate	Date that the monitoring occured	Date				
+Riparian	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+Riparian	IsVegetationObserved	Indicates whether riparian vegetation was observed at a spring	character				
+Riparian	MistletoePresent	Indicates whether mistletoe was observed at the spring	character				
+Riparian	LifeForm	"Type of riparian vegetation, split into broad and easily identifiable classes"	character				
+Riparian	Rank	Integer indicating relative canopy cover of vegetation life form. 1 indicates greatest canopy cover. Ties are allowed.	character				
+Riparian	DominantSpecies	Text description or name of the dominant species	character				
+Riparian	USDAPlantsCode	USDA plant code assigned to taxon	character				
+Riparian	ScientificName	Species scientific name	character				
+Riparian	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+Riparian	ProtectedStatus	Protected status of data record	character				
+Riparian	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
+Riparian	Notes	Additional notes about the riparian vegetation	character				
+SensorRetrievalAttempts	SensorNumber	Sensor model number	numeric	number			
+SensorRetrievalAttempts	SerialNumber	Sensor serial number	character				
+SensorRetrievalAttempts	DeploymentDate	Sensor deployment date	Date		YYYY-MM-DD		
+SensorRetrievalAttempts	DeploymentFieldSeason	Field season during deployment. Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+SensorRetrievalAttempts	RetrievalDate	Sensor retrieval date	Date		YYYY-MM-DD		
+SensorRetrievalAttempts	RetrievalFieldSeason	Field season during retrieval. Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+SensorRetrievalAttempts	SiteName	Descriptive name of the site	character				
+SensorRetrievalAttempts	SiteCode	Unique alphanumeric site code	character				
+SensorRetrievalAttempts	Park	Four letter park code	character				
+SensorRetrievalAttempts	SensorRetrieved	Was sensor retreived (Y/N)	character				
+SensorRetrievalAttempts	SensorProblem	Problem with retrieved sensor	character				
+SensorRetrievalAttempts	DownloadResult	Indicates whether sensor data were downloaded successfully	character				
+SensorRetrievalAttempts	RetrievalVisitType	"Purpose of sensor retrieval visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+SensorRetrievalAttempts	DeploymentVisitType	"Purpose of sensor deployment visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+SensorRetrievalAttempts	Notes	Notes on the sensor retrieval	character				
+SensorsCurrentlyDeployed	SensorNumber	Sensor model number	numeric	number			
+SensorsCurrentlyDeployed	SerialNumber	Sensor serial number	character				
+SensorsCurrentlyDeployed	SiteCode	Unique alphanumeric site code	character				
+SensorsCurrentlyDeployed	SiteName	Descriptive name of the site	character				
+SensorsCurrentlyDeployed	VisitDate	Date that the monitoring occured	Date		YYYY-MM-DD		
+SensorsCurrentlyDeployed	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+SensorsCurrentlyDeployed	Park	Four letter park code	character				
+SensorsCurrentlyDeployed	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+SensorsCurrentlyDeployed	Notes	Notes on the sensor deployment	character				
+Site	Park	Four letter park code	character				
+Site	Subunit	Section of the park where site is located	character				
+Site	SiteCode	Unique alphanumeric site code	character				
+Site	SiteName	Descriptive name of the site	character				
+Site	GRTSDraw	Documents the grts draw that applies to these locations.	character				
+Site	GRTSOrder	Order that spring appears in the GRTS draw. Unique for a GRTS frame	numeric	number			
+Site	SiteStatus	Documents the GRTS status of this plot	character				
+Site	SampleFrame	"Time frame that spring is sampled (3Yr, Annual, Inactive)"	character				
+Site	SiteProtectedStatus	Is the location of this site protected	character				
+Site	Lat_WGS84	Latitude in WGS84 coordinate system	numeric	degree			
+Site	Lon_WGS84	Longitude in WGS84 coordinate system	numeric	degree			
+Site	X_UTM_NAD83_11N	UTM Zone 11N X coordinate of spring	numeric	meter			
+Site	Y_UTM_NAD83_11N	UTM Zone 11N Y coordinate of spring	numeric	meter			
+Visit	Park	Four letter park code	character				
+Visit	SiteCode	Unique alphanumeric site code	character				
+Visit	SiteName	Descriptive name of the site	character				
+Visit	VisitDate	Date that the monitoring occured	Date		YYYY-MM-DD		
+Visit	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+Visit	SampleFrame	"Time frame that spring is sampled (3Yr, Annual, Inactive)"	character				
+Visit	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+Visit	MonitoringStatus	Result of monitoring visit: Sampled or reason unable to sample	character				
+Visit	SpringType	Hydrologic category of spring	character				
+Visit	Notes	General comments pertaining to spring visit	character				
+Visit	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
+VisitActivity	Park	Four letter park code	character				
+VisitActivity	SiteCode	Unique alphanumeric site code	character				
+VisitActivity	SiteName	Descriptive name of the site	character				
+VisitActivity	VisitDate	Date that the monitoring occured	Date		YYYY-MM-DD		
+VisitActivity	FieldSeason	Field Season is typically the Water Year defined as Oct. 1st - Sept. 30th	character				
+VisitActivity	SpringType	Hydrologic category of spring	character				
+VisitActivity	FlowCondition	Flow condition at time of visit	character				
+VisitActivity	WQDataCollected	Indicates whether the amount of water at the spring was sufficient for wq measurements	character				
+VisitActivity	InvasivesObserved	Indicates whether invasive species were observed at the spring	character				
+VisitActivity	RiparianObserved	Indicates whether ripaarian species were observed at the spring	character				
+VisitActivity	MistletoePresent	Indicates whether mistletoe was observed at the spring	character				
+VisitActivity	WildlifeObserved	Indicates whether evidence of wildlife was observed at the spring	character				
+VisitActivity	SpringbrookLength_Class	Spring brook length flag	character				
+VisitActivity	SpringbrookWidth_m	Length of springbrook in meters	numeric	meter			
+VisitActivity	SpringbrookLength_m	Width of springbrook in meters	numeric	meter			
+VisitActivity	SampleFrame	"Time frame that spring is sampled (3Yr, Annual, Inactive)"	character				
+VisitActivity	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+VisitActivity	MonitoringStatus	Result of monitoring visit: Sampled or reason unable to sample	character				
+VisitActivity	WaterQualityNotes	Additional notes on the water quality of the spring	character				
+WaterQualityDO	Park	Four letter park code	character				
+WaterQualityDO	SiteCode	Four letter park code	character				
+WaterQualityDO	SiteName	Unique alphanumeric site code	character				
+WaterQualityDO	VisitDate	Descriptive name of the site	Date		YYYY-MM-DD		
+WaterQualityDO	FieldSeason	Date that the monitoring occured	character				
+WaterQualityDO	WQDataCollected	Indicates whether the amount of water at the spring was sufficient for wq measurements	character				
+WaterQualityDO	DissolvedOxygen_percent	Percent measurement for Dissolved Oxygen	numeric	percent			
+WaterQualityDO	DissolvedOxygen_mg_per_L	Measured value of Dissolved Oxygen in milligrams per liter	numeric	milligramsPerLiter			
+WaterQualityDO	DataQualityFlag	"Data Quality Flag: No Flag, Information, Warning, Critical"	character				
+WaterQualityDO	DataQualityFlagNote	Notes about data quality flag	character				
+WaterQualityDO	DOInstrument	Water quality instrument used for measurement	character				
+WaterQualityDO	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+WaterQualityDO	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
+WaterQualityDO	MonitoringStatus	Result of monitoring visit: Sampled or reason unable to sample	character				
+WaterQualitypH	Park	Four letter park code	character				
+WaterQualitypH	SiteCode	Four letter park code	character				
+WaterQualitypH	SiteName	Unique alphanumeric site code	character				
+WaterQualitypH	VisitDate	Descriptive name of the site	Date		YYYY-MM-DD		
+WaterQualitypH	FieldSeason	Date that the monitoring occured	character				
+WaterQualitypH	WQDataCollected	Indicates whether the amount of water at the spring was sufficient for wq measurements	character				
+WaterQualitypH	pH	Measurement of pH for Water Quality	numeric	dimensionless			
+WaterQualitypH	DataQualityFlag	"Data Quality Flag: No Flag, Information, Warning, Critical"	character				
+WaterQualitypH	DataQualityFlagNote	Notes aboutdata quality flag	character				
+WaterQualitypH	pHInstrument	Water quality instrument used for measurement	character				
+WaterQualitypH	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+WaterQualitypH	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
+WaterQualitypH	MonitoringStatus	Result of monitoring visit: Sampled or reason unable to sample	character				
+WaterQualitySpCond	Park	Four letter park code	character				
+WaterQualitySpCond	SiteCode	Four letter park code	character				
+WaterQualitySpCond	SiteName	Unique alphanumeric site code	character				
+WaterQualitySpCond	VisitDate	Descriptive name of the site	Date		YYYY-MM-DD		
+WaterQualitySpCond	FieldSeason	Date that the monitoring occured	character				
+WaterQualitySpCond	WQDataCollected	Indicates whether the amount of water at the spring was sufficient for wq measurements	character				
+WaterQualitySpCond	SpecificConductance_microS_per_cm	Specific conductance measurement in microsiemens per centimeter	numeric	microsiemensPerCentimeter			
+WaterQualitySpCond	DataQualityFlag	"Data Quality Flag: No Flag, Information, Warning, Critical"	character				
+WaterQualitySpCond	DataQualityFlagNote	Notes aboutdata quality flag	character				
+WaterQualitySpCond	SpCondInstrument	Water quality instrument used for measurement	character				
+WaterQualitySpCond	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+WaterQualitySpCond	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
+WaterQualitySpCond	MonitoringStatus	Result of monitoring visit: Sampled or reason unable to sample	character				
+WaterQualityTemperature	Park	Four letter park code	character				
+WaterQualityTemperature	SiteCode	Four letter park code	character				
+WaterQualityTemperature	SiteName	Unique alphanumeric site code	character				
+WaterQualityTemperature	VisitDate	Descriptive name of the site	Date		YYYY-MM-DD		
+WaterQualityTemperature	FieldSeason	Date that the monitoring occured	character				
+WaterQualityTemperature	WQDataCollected	Indicates whether the amount of water at the spring was sufficient for wq measurements	character				
+WaterQualityTemperature	WaterTemperature_C	Temperature measurement in degrees C	numeric	celsius			
+WaterQualityTemperature	DataQualityFlag	"Data Quality Flag: No Flag, Information, Warning, Critical"	character				
+WaterQualityTemperature	DataQualityFlagNote	Notes aboutdata quality flag	character				
+WaterQualityTemperature	TempInstrument	Water quality instrument used for measurement	character				
+WaterQualityTemperature	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+WaterQualityTemperature	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
+WaterQualityTemperature	MonitoringStatus	Result of monitoring visit: Sampled or reason unable to sample	character				
+Wildlife	Park	Four letter park code	character				
+Wildlife	SiteCode	Four letter park code	character				
+Wildlife	SiteName	Unique alphanumeric site code	character				
+Wildlife	VisitDate	Descriptive name of the site	Date		YYYY-MM-DD		
+Wildlife	FieldSeason	Date that the monitoring occured	character				
+Wildlife	IsWildlifeObserved	Indicates whether evidence of wildlife was observed at the spring	character				
+Wildlife	WildlifeType	Indicates wildlife category of interest	character				
+Wildlife	DirectObservation	Indicates whether a direct observation was made of the specified wildilfe type	character				
+Wildlife	Scat	Indicates whether scat from the specified wildilfe type was found	character				
+Wildlife	Tracks	Indicates whether tracks from the specified wildilfe type were found	character				
+Wildlife	Shelter	Indicates whether shelter/burrows from the specified wildilfe type were found	character				
+Wildlife	Foraging	Indicates whether foraging from the specified wildlife type was found	character				
+Wildlife	Vocalization	Indicates whether vocalization from the specified wildilfe type was heard	character				
+Wildlife	OtherEvidence	Indicates whether other evidence from the specified wildilfe type was found	character				
+Wildlife	Notes	Notes pertaining to wildlife evidence	character				
+Wildlife	VisitType	"Purpose of visit: Primary, Replicate, Training, Calibration, Auxillary, Unknown"	character				
+Wildlife	DPL	"Level of data processing applied to this data [Raw, Provisional, Accepted, Certified]"	character				
