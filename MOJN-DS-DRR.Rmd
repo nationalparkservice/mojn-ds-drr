@@ -2,10 +2,10 @@
 params:
 
   reportNumber: ""                           # Optional. Only include this if publishing in the semi-official Data Release Report Series. Contact Joe if you are.
-  reportRefID: 
+  reportRefID: 2294501
   packageAbstract: >-
-    This report summarizes data quality evaluations of discrete data collected for the Mojave Desert Network Inventory and Monitoring Program (MOJN I&M) Desert Springs (DS) protocol from 2016 to 2022. This protocol is designed to monitor hydrological and ecological condition at 250 springs in Death Valley National Park (DEVA), Joshua Tree National Park (JOTR), Lake Mead National Recreation Area (LAKE), Mojave National Preserve (MOJA), and Grand Canyon-Parashant National Monument (PARA). Data collected include water quantity and water quality measurements as well as site condition information about dominant vegetation, invasive plants, disturbance, and wildlife evidence.
-  dataPackage1RefID: 
+    This report summarizes data quality evaluations of discrete data collected for the Mojave Desert Network Inventory and Monitoring Program (MOJN I&M) Desert Springs protocol from 2016 to 2022. This protocol is designed to monitor hydrological and ecological condition at 250 springs in Death Valley National Park (DEVA), Joshua Tree National Park (JOTR), Lake Mead National Recreation Area (LAKE), Mojave National Preserve (MOJA), and Grand Canyon-Parashant National Monument (PARA). Data collected include water quantity and water quality measurements as well as site condition information about dominant vegetation, invasive plants, disturbance, and wildlife evidence.
+  dataPackage1RefID: 2294501
   dataPackage1Title: "MOJN I&M Desert Springs Data Package 2016-2022"               # Should match title in data store.
   dataPackage1Description: "MOJN I&M DS 2016-2022"  
   dataPackage2RefID: 0                              # Data Store reference ID for data set associated with this report. You must have at least one.
@@ -229,7 +229,7 @@ if (file.exists(file=here::here("data", "temp", "projectMetadata.RData"))) {
 <hr>
 # Background & Introduction
 
-The following information is summarized from the *Springs in the Mojave Desert Network—Surface water monitoring at desert springs: Protocol narrative version 1.0* (NPS/MOJN/NRR—2018/1718), available here: https://irma.nps.gov/DataStore/Reference/Profile/2254900. Refer to the protocol narrative for more detailed information.
+The following background information is summarized from the *Springs in the Mojave Desert Network—Surface water monitoring at desert springs: Protocol narrative version 1.0* (NPS/MOJN/NRR—2018/1718), available here: https://irma.nps.gov/DataStore/Reference/Profile/2254900. Refer to the protocol narrative for more detailed information.
 
 ## Significance
 
@@ -304,7 +304,7 @@ slick_dots %synch% slick_cap_synch + opts_dot_number
 
 ## Threats and Stressors
 
-Springs are vulnerable to several stressors, including climate change and groundwater withdrawal. In the southwestern United States, increasing air temperatures and declining snowpacks have intensified drought and reduced aquifer recharge (USGCRP 2018). Springs fed by small, local aquifers are particularly vulnerable to drought. They may experience lower discharge or even go dry entirely. Springs fed by larger, regional aquifers are more resilient to recent climate change but may be vulnerable to groundwater withdrawal happening outside of their park. For large aquifers with slow recharge, it may take centuries for water levels to recover after pumping is discontinued (Bredehoeft and Durbin 2009). At all springs, higher air temperatures can lead to water loss through increases in evapotranspiration as well as changes in plant communities and wildlife use patterns.
+Springs are vulnerable to multiple stressors, including climate change and groundwater withdrawal. In the southwestern United States, increasing air temperatures and declining snowpacks have intensified drought and reduced aquifer recharge (USGCRP 2018). Springs fed by small, local aquifers are particularly vulnerable to drought. They may experience lower discharge or even go dry entirely. Springs fed by larger, regional aquifers are more resilient to recent climate change but may be vulnerable to groundwater withdrawal happening outside of their park. For large aquifers with slow recharge, it may take centuries for water levels to recover after pumping is discontinued (Bredehoeft and Durbin 2009). At all springs, higher air temperatures can lead to water loss through increases in evapotranspiration as well as changes in plant communities and wildlife use patterns.
 
 Other stressors include surface water diversions, livestock disturbance, recreation, and invasive species. Active and historical diversions, such as pipes and troughs, are widespread at springs within the network and may alter or eliminate downstream riparian habitat. Grazing and trampling by livestock, such as cattle, feral donkeys (burro), and feral horses, can also negatively affect riparian vegetation and habitat. Threats from improper recreation include social trails, fire pits, bank degradation, and failure to dispose of garbage and human waste. Invasive trees like salt cedar and palms often outcompete native plants for limited water and nutrients, and invasive grasses are shifting fire regimes across the landscape. Invasive animals, including amphibians, fish, arthropods, and molluscs, can put pressure on native species through predation, hybridization, or competition for resources.
 
@@ -312,7 +312,7 @@ Other stressors include surface water diversions, livestock disturbance, recreat
 
 The Mojave Desert Network Inventory and Monitoring Program (MOJN I&M) monitors 248 springs across Death Valley National Park (DEVA), Joshua Tree National Park (JOTR), Lake Mead National Recreation Area (LAKE), Mojave National Preserve (MOJA), and Grand Canyon-Parashant National Monument (PARA) as part of the Desert Springs protocol (Figure 2). Springs were selected at each park using a Generalized Random Tessellation Stratified (GRTS) spatially-balanced random sample.
 
-A subset of 60 springs are monitored annually and are equipped with data-logging sensors to provide continuous records of surface water presence. There are 20 annual springs in DEVA and 10 annual springs in the other four parks. The remaining 188 springs are monitored on a 3-year rotation. There are 60 3-year springs in DEVA, 35 in MOJA, 35 in PARA, 33 in LAKE, and 25 in JOTR. Approximately 120 springs are monitored each field season.
+A subset of 60 springs are monitored annually and are equipped with data-logging sensors to provide continuous records of surface water presence. There are 20 annual springs in DEVA and 10 annual springs in each of the other four parks. The remaining 188 springs are monitored on a 3-year rotation. There are 60 3-year springs in DEVA, 35 in MOJA, 35 in PARA, 33 in LAKE, and 25 in JOTR. Approximately 120 springs are monitored each field season.
 
 ``` {r figure2, echo = FALSE, fig.align = "left", fig.cap = capFig("Map of desert springs monitoring locations. Blue circles indicate springs monitored every year. Red circles indicate springs monitored every three years."), fig.alt = "Map of 248 springs monitored by MOJN I&M across the five network parks."}
 locationmap <- LocationMap(conn)
@@ -338,7 +338,7 @@ In addition to these measurable objectives, the protocol also collects qualitati
 - Invasive plants
 - Disturbance
 - Wildlife evidence
-- Repeat Photographs
+- Repeat photographs
 
 Because MOJN I&M field crews are often the only NPS field crews visiting many of these springs regularly, this site condition information can provide park managers with useful information about springs that would not be collected otherwise.
 
@@ -376,7 +376,7 @@ if (params$isAccessible == "yes") {
 
 ## Data Processing
 
-Data were evaluated using a collection of QC checks that are part of the MOJN I&M Streams and Lakes R package. These evaluations are summarized in Section 4 of this document. Where unresolvable data quality issues existed, they have been described by a flag note in the data record, and a flag has been assigned to indicate the level of concern. These flags include Information (not expected to impact the validity of this data), Warning (care should be taken when including this record in analyses), and Critical (serious concerns about the quality of this record and it should not be used in analyses).
+Data were evaluated using a collection of QC checks that are part of the MOJN I&M Desert Springs R package. These evaluations are summarized in Section 4 of this document. Where unresolvable data quality issues exist, the data have been assigned a flag to indicate the level of concern and further described by a flag note. These flags include Information (not expected to impact the validity of the data), Warning (care should be taken when including the data in analyses), and Critical (serious concerns about the quality of the data, and they should not be used in analyses).
 
 ## Code Availability
 
@@ -405,7 +405,7 @@ reactable(Table,
 
 # Data Quality Evaluation
 
-The data within the data records listed above have been reviewed by staff in the NPS Inventory and Monitoring Division to ensure accuracy, completeness, and consistency with documented data quality standards, as well as for usability and reproducibility. For additional information on data quality standards for this protocol, refer to *Data Quality Standards for Springs in the Mojave Desert Network–Surface Water Monitoring at Desert Springs* (NPS/MOJN/NRR—2018/1819), available here: https://irma.nps.gov/DataStore/Reference/Profile/2257548.
+The data in the data package described above have been reviewed by staff in the NPS Inventory and Monitoring Division to ensure accuracy, completeness, and consistency with documented data quality standards, as well as for usability and reproducibility. For additional information on data quality standards for this protocol, refer to *Data Quality Standards for Springs in the Mojave Desert Network–Surface Water Monitoring at Desert Springs* (NPS/MOJN/NRR—2018/1819), available here: https://irma.nps.gov/DataStore/Reference/Profile/2257548.
 
 ## Advice and Caveats
  
