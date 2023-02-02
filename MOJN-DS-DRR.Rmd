@@ -12,8 +12,8 @@ params:
   dataPackage2Title: "Dataset 2 FULL TITLE"               # Should match title in data store.
   dataPackage2Description: "SHORT TITLE FOR DATASET 1"  
   dataSource: "database"  # Either "local" or "database". If "local", csv data must be in data/raw folder. If database, must be able to connect to the MOJN DS SQL Server db.
-  isAccessible: "no" # Either "yes" for a version that is screen-readable or "no" for a version with interactive table and plot formatting.
-  wateryearStart: "2016"
+  isAccessible: "yes" # Either "yes" for a version that is screen-readable or "no" for a version with interactive table and plot formatting.
+  wateryearStart: "2016"  # Enter the start and end year for data that you want this report to include by default (can be the same year)
   wateryearEnd: "2022"
   
 title: |
@@ -22,7 +22,7 @@ title: |
 subtitle: |
   | Data Release Report `r params$reportNumber` 
 author:
-  - name: "Jennifer Bailard"
+  - name: "Jennifer Bailard, Sarah Wright, and Mark Lehman"
     affiliation: |
       | Mojave Desert Network
       | Inventory and Monitoring Program 
@@ -149,7 +149,7 @@ if ("ggplot2" %in% .packages()) {
 
 knitr::opts_chunk$set(fig.width=8)
 
-conn <- OpenDatabaseConnection()
+LoadDesertSprings()
 
 # Convert start and end water years assigned in the params to a year range that can be applied to functions through the field.season parameter
 wy <- as.numeric(params$wateryearStart)
@@ -304,7 +304,7 @@ slick_dots %synch% slick_cap_synch + opts_dot_number
 
 ## Threats and Stressors
 
-Springs are vulnerable to multiple stressors, including climate change and groundwater withdrawal. In the southwestern United States, increasing air temperatures and declining snowpacks have intensified drought and reduced aquifer recharge (USGCRP 2018). Springs fed by small, local aquifers are particularly vulnerable to drought. They may experience lower discharge or even go dry entirely. Springs fed by larger, regional aquifers are more resilient to recent climate change but may be vulnerable to groundwater withdrawal happening outside of their park. For large aquifers with slow recharge, it may take centuries for water levels to recover after pumping is discontinued (Bredehoeft and Durbin 2009). At all springs, higher air temperatures can lead to water loss through increases in evapotranspiration as well as changes in plant communities and wildlife use patterns.
+Springs are vulnerable to multiple stressors, including climate change and groundwater withdrawal. In the southwestern United States, increasing air temperatures and declining snowpacks have intensified drought and reduced aquifer recharge (Gonzalez et al. 2018). Springs fed by small, local aquifers are particularly vulnerable to drought. They may experience lower discharge or even go dry entirely. Springs fed by larger, regional aquifers are more resilient to recent climate change but may be vulnerable to groundwater withdrawal happening outside of their park. For large aquifers with slow recharge, it may take centuries for water levels to recover after pumping is discontinued (Bredehoeft and Durbin 2009). At all springs, higher air temperatures can lead to water loss through increases in evapotranspiration as well as changes in plant communities and wildlife use patterns.
 
 Other stressors include surface water diversions, livestock disturbance, recreation, and invasive species. Active and historical diversions, such as pipes and troughs, are widespread at springs within the network and may alter or eliminate downstream riparian habitat. Grazing and trampling by livestock, such as cattle, feral donkeys (burro), and feral horses, can also negatively affect riparian vegetation and habitat. Threats from improper recreation include social trails, fire pits, bank degradation, and failure to dispose of garbage and human waste. Invasive trees like salt cedar and palms often outcompete native plants for limited water and nutrients, and invasive grasses are shifting fire regimes across the landscape. Invasive animals, including amphibians, fish, arthropods, and molluscs, can put pressure on native species through predation, hybridization, or competition for resources.
 
@@ -314,8 +314,8 @@ The Mojave Desert Network Inventory and Monitoring Program (MOJN I&M) monitors 2
 
 A subset of 60 springs are monitored annually and are equipped with data-logging sensors to provide continuous records of surface water presence. There are 20 annual springs in DEVA and 10 annual springs in each of the other four parks. The remaining 188 springs are monitored on a 3-year rotation. There are 60 3-year springs in DEVA, 35 in MOJA, 35 in PARA, 33 in LAKE, and 25 in JOTR. Approximately 120 springs are monitored each field season.
 
-``` {r figure2, echo = FALSE, fig.align = "left", fig.cap = capFig("Map of desert springs monitoring locations. Blue circles indicate springs monitored every year. Red circles indicate springs monitored every three years."), fig.alt = "Map of 248 springs monitored by MOJN I&M across the five network parks."}
-locationmap <- LocationMap(conn)
+``` {r figure2, echo = FALSE, fig.align = "left", out.width = "100%", fig.cap = capFig("Map of desert springs monitoring locations. Blue circles indicate springs monitored every year. Red circles indicate springs monitored every three years. Small yellow circles indicate springs that were inventoried but not typically monitored."), fig.alt = "Map of 248 springs monitored by MOJN I&M across the five network parks."}
+locationmap <- LocationMap()
 
 locationmap
 ```
@@ -361,17 +361,18 @@ tbl <- tibble::tibble(type, msr, dscr) %>%
                 Measurement = msr,
                 Description = dscr)
 
-if (params$isAccessible == "yes") {
-  knitr::kable(tbl) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  tbl %>%
-    reactable(compact = TRUE,
+tbl %>%
+    reactable::reactable(
+              compact = TRUE,
               striped = TRUE,
+              bordered = TRUE,
+              highlight = TRUE,
+              resizable = TRUE,
               columns = list(
-                MeasurementType = colDef(width = 160),
-                Description = colDef(minWidth = 180)))
-}
+                MeasurementType = reactable::colDef(minWidth = 130,
+                                                    name = "Measurement Type"),
+                Measurement = reactable::colDef(minWidth = 180),
+                Description = reactable::colDef(minWidth = 300)))
 ```
 
 ## Data Processing
@@ -385,21 +386,28 @@ All of the code used in the preparation of this data package is available in the
 # Data Records
 The published product is one data package containing multiple CSV data files:
 
-* **`r params$dataPackage1Title`.** Comma-separated text files containing data from the MOJN I&M Desert Springs protocol. These data were compiled by the MOJN I&M and were last updated on <INSERT DATE>. Available at `r paste0("https://irma.nps.gov/DataStore/Reference/Profile/", params$dataPackage1RefID)`. 
+* **`r params$dataPackage1Title`.** Comma-separated text files containing data from the MOJN I&M Desert Springs protocol. These data were compiled by the MOJN I&M and were last updated on `r params$date`. Available at `r paste0("https://irma.nps.gov/DataStore/Reference/Profile/", params$dataPackage1RefID)`. 
 
-[INSERT NUMBER] CSV data files contain raw values suitable for use with the MOJN I&M Desert Springs R package. [INSERT NUMBER] additional CSV data files contain calculated values generated using this R package. These files are clearly labeled as "calculated" (Table 2).
+Twenty CSV data files contain raw values suitable for use with the MOJN I&M Desert Springs R package (Table 2).
 
 A data dictionary for all of the tables and fields in the published CSV files is provided in XML format with this data package. 
 
 ```{r table2, echo = FALSE, fig.cap = capTab("File names and descriptions of published CSVs accompanying this data release report.")}
-FileName <- c("DischargeEstimated", "DischargeFlowCondition", "DischargeVolumetric", "Disturbance", "DisturbanceFlowModification", "Invasives", "Riparian", "SensorRetrievalAttempts", "SensorsCurrentlyDeployed", "SensorsNeverDeployed", "Site", "Visit", "VisitActivity", "WaterQualityDO", "WaterQualitypH", "WaterQualitySpCond", "WaterQualityTemperature", "Wildlife")
-Description <- c("Visually estimated discharge categories at springs", "Springbrook lengths, widths, and flow condition categories", "Volumetrically collected discharge measurements at springs", "Natural and anthropogenic disturbance presence, cover classes, and descriptions at springs", "Presence and type of surface flow modification at springs", "Invasive vegetation species observed at springs", "Vegetation life form category presence, rank, and dominant species", "PLACEHOLDER", "PLACEHOLDER", "PLACEHOLDER", "Description and location of site codes used in this dataset", "PLACEHOLDER", "Summary of types of data collected during site visit", "Dissolved oxygen measured in springs", "pH measured in springs", "Specific conductance measured in springs", "Temperature measured in springs", "Wildlife use evidence types and descriptions")
-Table <- data.frame(FileName, Description)
+FileName <- c("CalibrationDO", "CalibrationpH", "CalibrationSpCond", "DischargeEstimated", "DischargeFlowCondition", "DischargeVolumetric", "Disturbance", "DisturbanceFlowModification", "Invasives", "Riparian", "SensorRetrievalAttempts", "SensorsCurrentlyDeployed", "Site", "Visit", "VisitActivity", "WaterQualityDO", "WaterQualitypH", "WaterQualitySpCond", "WaterQualityTemperature", "Wildlife")
+Description <- c("Dissolved oxgyen calibration records", "pH calibration records", "Specific conductance calibration records", "Visually estimated discharge categories", "Springbrook lengths, widths, and flow condition categories", "Volumetrically collected discharge measurements", "Natural and anthropogenic disturbance presence, cover classes, and descriptions", "Presence and type of surface flow modifications", "Invasive vegetation species observations", "Vegetation life form category presence, rank, and dominant species", "Sensor recovery and download results and problems", "Serial numbers of currently deployed sensors", "Locations of spring sites in this dataset", "Sample frames, visit types, and monitoring status of spring sites", "Summary of types of data collected during site visits", "Dissolved oxygen measurements in springs", "pH measurements in springs", "Specific conductance measurements in springs", "Water temperature measurements in springs", "Wildlife use evidence types and descriptions")
+tbl <- data.frame(FileName, Description)
 
-reactable(Table,
-          columns = list(FileName = colDef(name = "Filename")),
+tbl %>%
+  reactable::reactable(
+          columns = list(FileName = reactable::colDef(name = "Filename",
+                                                      minWidth = 140),
+                         Description = reactable::colDef(minWidth = 320)),
           pagination = FALSE,
-          compact = TRUE, striped = TRUE)
+          compact = TRUE,
+          striped = TRUE,
+          bordered = TRUE,
+          highlight = TRUE,
+          resizable = TRUE)
 
 ```
 
@@ -408,78 +416,70 @@ reactable(Table,
 The data in the data package described above have been reviewed by staff in the NPS Inventory and Monitoring Division to ensure accuracy, completeness, and consistency with documented data quality standards, as well as for usability and reproducibility. For additional information on data quality standards for this protocol, refer to *Data Quality Standards for Springs in the Mojave Desert Network–Surface Water Monitoring at Desert Springs* (NPS/MOJN/NRR—2018/1819), available here: https://irma.nps.gov/DataStore/Reference/Profile/2257548.
 
 ## Advice and Caveats
- 
+
 - During the first field season in WY2016, LAKE springs were monitored in March and April. In all subsequent field seasons, LAKE springs were monitored in November and December.
-- CAMO was established in February 2016. It was inventoried in November 2016, and two possible springs were identified. These two springs are monitored opportunistically every 3-years at the same time as the MOJA 3-year springs.
+- CAMO was established in February 2016. It was inventoried in November 2016, and two springs were identified for monitoring. These two springs are monitored opportunistically every three years at the same time as the MOJA 3-year springs.
+- In WY2016, water quality instruments were not maintained to modern protocol standards. In particular, dissolved oxygen and pH measurements from the first field season may not be high quality data.
+- In WY2018, calibration and measurement of dissolved oxygen percent began using the local dissolved oxygen percent convention. While calibrating to local dissolved oxygen, the calibration value is 100% regardless of the barometric pressure at the time of calibration, because the calibration environment is at 100% oxygen pressure for that specific location. Dissolved oxygen percent may not be comparable between years before and after this change.
+- Beginning in WY2019, ungulate observations were separated from mammal observations in wildlife evidence.
 - Due to the 35-day lapse in federal appropriations from late December 2018 to late January 2019, one annual spring in DEVA and both springs in CAMO were not monitored during WY2019.
 - Due to COVID-19 pandemic travel restrictions beginning in March 2020, monitoring of annual and 3-year springs was not completed in PARA during WY2020.
 - Due to COVID-19 pandemic travel restrictions from December 2020 to February 2021, monitoring of 3-year springs was not completed in DEVA during WY2021. Some annual springs were monitored later than usual during the field season, when field work was allowed to resume.
-- In WY2016, water quality instruments were not maintained to protocol standards. In particular, dissolved oxygen and pH measurements from the first field season may not be high quality data.
-- In WY2018, calibration and measurement of dissolved oxygen percent began using the local dissolved oxygen percent convention. Dissolved oxygen percent may not be comparable between years before and after this change.
-- In WY2019, ungulate observations were separated from mammal observations in wildlife evidence.
-- In WY2021, measurement of springbrook length was separated into continuous and discontinuous measurements. Previously, only continuous springbrook length was measured.
+- Beginning in WY2021, measurement of springbrook length was separated into continuous and discontinuous measurements. Previously, only continuous springbrook length was measured.
 
-`r if(params$isAccessible == "yes") {"## General"} else {"## General {.tabset}"}`
+## General {.tabset}
 
 ### Not sampled
 
-This table lists springs that were not sampled during a field season or visit when they were intended to be monitored. No spring found indicates that there was no evidence of recent discharge, even periodic. Evidence could include riparian or denser wash vegetation or channelization. No spring found usually leads to a spring being rejected and removed from the sample frame. Inaccessible indicates that there were temporary or permanent barriers to physically reaching a spring. Barriers could include road washouts, unsafe terrain, or private property. Some springs were deemed inaccessible due to unsafe terrain in the office, while other springs were deemed inaccessible upon observation of unsafe terrain in the field. Inaccessible springs are skipped in the GRTS draw order, but they are not rejected or removed from the sample frame.
+This table lists springs that were not sampled during a field season or visit when they were intended to be monitored. "No spring found" indicates that there was no evidence of recent discharge, even periodic. Evidence could include riparian or denser wash vegetation or channelization. "No spring found" usually leads to a site being rejected and removed from the sample frame. Inaccessible indicates that there were temporary or permanent barriers to physically reaching a spring. Barriers could include road washouts, unsafe terrain, or private property. Some springs were deemed inaccessible due to unsafe terrain in the office, while other springs were deemed inaccessible upon observation of unsafe terrain in the field. Inaccessible springs are skipped in the GRTS draw order, but they are not rejected or removed from the sample frame.
 
 ``` {r notsampled, fig.cap = capTab("Springs that were not samped during a field season.")}
-notsampled <- qcNotSampled(conn = conn, data.source = "database")
+notsampled <- qcNotSampled()
 
 notsampled %<>%
-  select(-c(VisitType)) %>%
   arrange(SiteCode)
 
-if (params$isAccessible == "yes") {
-  knitr::kable(notsampled) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(notsampled, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- notsampled$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            resizable = TRUE,
-            compact = TRUE,
-            striped = TRUE)
-}
+notsampled %>%
+  reactable::reactable(sortable = TRUE,
+                       filterable = TRUE,
+                       compact = TRUE,
+                       striped = TRUE,
+                       bordered = TRUE,
+                       highlight = TRUE,
+                       resizable = TRUE,
+                       defaultColDef = reactable::colDef(
+                        header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Completeness 
 
 This table provides the number and percentage of springs monitored at each park for each field season. Large disruptions to the field season occurred in WY2019 with the 35-day lapse in federal appropriations and in WY2020 and WY2021 with travel restrictions due to the COVID-19 pandemic.
 
-``` {r completeness, message = FALSE, warning = FALSE, fig.cap = capTab("Number and percent of springs monitored at each park for each field season.")}
-completeness <- qcCompleteness(conn = conn, data.source = "database")
+``` {r completeness, message = FALSE, warning = FALSE, fig.cap = capTab("Number and percentage of springs monitored at each park and field season.")}
+completeness <- qcCompleteness()
 
 completeness %<>%
   dplyr::mutate(Percent = round(Percent, 1)) %>%
   dplyr::filter(MonitoringStatus == "Sampled")
 
-if (params$isAccessible == "yes") {
-  knitr::kable(completeness) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  completeness %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+completeness %>%
+  reactable::reactable(sortable = TRUE,
+                       filterable = TRUE,
+                       compact = TRUE,
+                       striped = TRUE,
+                       bordered = TRUE,
+                       highlight = TRUE,
+                       resizable = TRUE,
+                       defaultColDef = reactable::colDef(
+                         header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Completeness plot
 
 This stacked bar plot shows the percentage of springs monitored at each park for each field season. Large disruptions to the field season occurred in WY2019 with the 35-day lapse in federal appropriations and in WY2020 and WY2021 with travel restrictions due to the COVID-19 pandemic.
 
-``` {r completeness.plot, message = FALSE, warning = FALSE, fig.cap = capFig("Stacked bar plot of annual and 3-yr spring sampled and not sampled at each park for each field season."), fig.alt = ""}
-completeness.plot <- qcCompletenessPlot(conn = conn, data.source = "database")
+``` {r completeness.plot, message = FALSE, warning = FALSE, out.width = "100%", fig.cap = capFig("Annual and 3-yr spring sampled and not sampled at each park for each field season."), fig.alt = "Stacked bar plot showing the number of springs that were sampled and not sampled at each park for each field season. Parashant in water year 2020 and Death Valley in water year 2021 had the lowest completeness due to the pandemic."}
+completeness.plot <- qcCompletenessPlot()
 
 if (params$isAccessible == "yes") {
   completeness.plot
@@ -495,28 +495,67 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-### Visit dates
+### Visit dates by spring
 
 This table provides the date (month and day) that each spring was visited during each field season. Springs should be visited at approximately the same time of year during each field season, ideally within a few weeks, in order to minimize seasonal effects on the data.
 
-``` {r visitdate, warning = FALSE, fig.cap = capTab("Date (month and day) that each spring was visited during each field season.")}
-visitdate <- qcVisitDate(conn = conn, data.source = "database")
+``` {r visitsbysite, warning = FALSE, fig.cap = capTab("Date (month and day) that each spring was visited during each field season.")}
+visitsbysite <- qcVisitsBySite()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(visitdate) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  visitdate %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+visitsbysite %>%
+  reactable::reactable(sortable = TRUE,
+                       filterable = TRUE,
+                       compact = TRUE,
+                       striped = TRUE,
+                       bordered = TRUE,
+                       highlight = TRUE,
+                       resizable = TRUE,
+                       columns = list(
+                         VisitDates = reactable::colDef(
+                           minWidth = 115),
+                         SiteCode = reactable::colDef(
+                           minWidth = 160),
+                         SampleFrame = reactable::colDef(
+                           minWidth = 150),
+                         SiteName = reactable::colDef(
+                           minWidth = 150)),
+                       defaultColDef = reactable::colDef(
+                         header = function(value) snakecase::to_title_case(value)))
+```
+
+### Spring visits by date
+
+This table provides the site codes of springs that were visited on each date during each field season.
+
+``` {r visitsbydate, warning = FALSE, fig.cap = capTab("Springs that were visited on each date (month and day) during each field season.")}
+visitsbydate <- qcVisitsByDate()
+
+
+visitsbydate %>%
+  reactable::reactable(sortable = TRUE,
+                       filterable = TRUE,
+                       compact = TRUE,
+                       striped = TRUE,
+                       bordered = TRUE,
+                       highlight = TRUE,
+                       resizable = TRUE,
+              defaultColDef = reactable::colDef(
+                width = 160,
+                header = function(value) gsub("Y", "Y ", value)),
+              columns = list(
+                Date = reactable::colDef(
+                  sticky = "left",
+                  style = list(borderRight = "1px solid #eee"),
+                  headerStyle = list(borderRight = "1px solid #eee"),
+                  width = 100)))
 ```
 
 ### Visit dates timeline
 
 These timelines show the date (month and day) that each spring was visited during each field season. They also show the median visit date across all field seasons at each spring. Springs should be visited at approximately the same time of year during each field season, ideally within a few weeks, in order to minimize seasonal effects on the data.
 
-``` {r visitdate.timeline.1, warning = FALSE, out.height = 1600, fig.cap = capFig("Timeline of annual and 3-yr spring visits in DEVA."), fig.alt = ""}
-visitdate.plots <- qcVisitDateTimelines(conn = conn, park = "DEVA", data.source = "database")
+``` {r visitdate.timeline.1, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in DEVA."), fig.alt = ""}
+visitdate.plots <- qcVisitDateTimelines(park = "DEVA")
 
 if (params$isAccessible == "yes") {
   visitdate.plots
@@ -532,8 +571,8 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r visitdate.timeline.2, warning = FALSE, out.height = 800, fig.cap = capFig("Timeline of annual and 3-yr spring visits in JOTR."), fig.alt = ""}
-visitdate.plots <- qcVisitDateTimelines(conn = conn, park = "JOTR", data.source = "database")
+``` {r visitdate.timeline.2, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in JOTR."), fig.alt = ""}
+visitdate.plots <- qcVisitDateTimelines(park = "JOTR")
 
 if (params$isAccessible == "yes") {
   visitdate.plots
@@ -549,8 +588,8 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r visitdate.timeline.3, warning = FALSE, out.height = 800, fig.cap = capFig("Timeline of annual and 3-yr spring visits in LAKE."), fig.alt = ""}
-visitdate.plots <- qcVisitDateTimelines(conn = conn, park = "LAKE", data.source = "database")
+``` {r visitdate.timeline.3, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in LAKE."), fig.alt = ""}
+visitdate.plots <- qcVisitDateTimelines(park = "LAKE")
 
 if (params$isAccessible == "yes") {
   visitdate.plots
@@ -566,8 +605,8 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r visitdate.timeline.4, warning = FALSE, out.height = 800, fig.cap = capFig("Timeline of annual and 3-yr spring visits in MOJA."), fig.alt = ""}
-visitdate.plots <- qcVisitDateTimelines(conn = conn, park = "MOJA", data.source = "database")
+``` {r visitdate.timeline.4, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in MOJA."), fig.alt = ""}
+visitdate.plots <- qcVisitDateTimelines(park = "MOJA")
 
 if (params$isAccessible == "yes") {
   visitdate.plots
@@ -583,8 +622,8 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r visitdate.timeline.5, warning = FALSE, out.height = 800, fig.cap = capFig("Timeline of annual and 3-yr spring visits in PARA."), fig.alt = ""}
-visitdate.plots <- qcVisitDateTimelines(conn = conn, park = "PARA", data.source = "database")
+``` {r visitdate.timeline.5, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in PARA."), fig.alt = ""}
+visitdate.plots <- qcVisitDateTimelines(park = "PARA")
 
 if (params$isAccessible == "yes") {
   visitdate.plots
@@ -604,18 +643,13 @@ if (params$isAccessible == "yes") {
 
 This table provides a list of springs that were visited multiple times during a field season. There should only be one primary visit per field season. Supplemental visits involve collecting specific data to supplement the data collected during the primary visit. Supplemental visits typically occur when a sensor is inadvertently forgotten during the primary visit and the spring is revisited later in the field season for sensor deployment. Replicate visits involve collecting a full set of data in addition to the data collected during the primary visit. Replicate visits may occur during training or when calibrating or comparing field crews.
 
-
 ``` {r repeats, fig.cap = capTab("Springs visited more than one time per field season.")}
-repeats <- qcRepeatVisits(conn = conn, data.source = "database")
+repeats <- qcRepeatVisits()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(repeats) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(repeats, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
+reactable::reactable(dplyr::select(repeats, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 50,
+                                              header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- repeats$Notes[index]
@@ -624,27 +658,31 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE)
 ```
-
 
 ### Spring type discrepancies
 
 This table provides a list of springs that have been categorized differently (e.g., rheocrene vs hillslope) during different visits. Discrepancies typically occur when a spring is dry, and it is difficult to determine the spring type, or when a spring exhibits multiple spring types along its reach.
 
 ``` {r discrepancies, fig.cap = capTab("Springs that have been assigned different spring types during different visits.")}
-discrepancies <- qcSpringTypeDiscrepancies(conn = conn, data.source = "database")
+discrepancies <- qcSpringTypeDiscrepancies()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(discrepancies) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  discrepancies %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+discrepancies %>%
+  reactable::reactable(sortable = TRUE,
+                       filterable = TRUE,
+                       compact = TRUE,
+                       striped = TRUE,
+                       bordered = TRUE,
+                       highlight = TRUE,
+                       resizable = TRUE,
+                       defaultColDef = reactable::colDef(header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Data processing levels
@@ -652,269 +690,44 @@ if (params$isAccessible == "yes") {
 This table lists site visits that have any data labeled as "Raw" or "Provisional." These data need to be reviewed and moved to "Accepted" status before publication of the dataset.
 
 ``` {r dpl.check, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = capTab("Records with data still labeled as Raw or Provisional.")}
-dpl.check <- qcDPLCheck(conn, data.source = "database")
+dpl.check <- qcDPLCheck()
 
-if (params$isAccessible == "yes") {
-  dpl.check %>%
-    rename_with(~ gsub(".DPL", "", .x)) %>%
-    knitr::kable() %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  dpl.check %>%
-    rename_with(~ gsub(".DPL", "", .x)) %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+dpl.check %>%
+  dplyr::rename_with(~ gsub(".DPL", "", .x)) %>%
+  reactable::reactable(sortable = TRUE,
+                       filterable = TRUE,
+                       compact = TRUE,
+                       striped = TRUE,
+                       bordered = TRUE,
+                       highlight = TRUE,
+                       resizable = TRUE,
+                       wrap = FALSE,
+                       defaultColDef = reactable::colDef(header = function(value) if (value == "pH") {
+                         value
+                         } else {
+                         snakecase::to_title_case(value)
+                         }))
 ```
 `r if(nrow(dpl.check) == 0){"All records have been accepted."}`
 `r if(nrow(dpl.check) > 0){"The above records need to be reviewed and accepted before publication."}`
 
-`r if(params$isAccessible == "yes") {"## Sensor information"} else {"## Sensor information {.tabset}"}`
-
-### Sensor summary
-
-This table summarizes sensor deployment, recovery, and successful download status for each park and field season. Percent retrieved is the percentage of sensors that were successfully recovered of those where a recovery attempt was made. Percent downloaded is the percentage of sensors that were successfully downloaded of those recovered. Beginning in 2019, a new sensor model was deployed that raised the percent downloaded success rate to 100%.
-
-``` {r sensorsummary, fig.cap = capTab("Sensor deployment, recovery, and download summaries.")}
-summary <- qcSensorSummary(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(summary) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  summary %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
-```
-
-### Sensor recovery heatmap
-
-This heatmap shows which sites have consistent sensor recovery, sensor loss, or a combination of both. Gaps indicate that a sensor was not deployed during that field season.
-
-``` {r sensorheatmap, out.height = 1000, fig.cap = capFig("Heatmap of sensor recovery at annual springs.")}
-heatmap <- qcSensorHeatmap(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  heatmap
-} else {
-  ggplotly(heatmap, tooltip = "text")
-}
-```
-
-### Sensors not deployed
-
-This table lists annual springs where a sensor was not deployed. If there is a visit date associated with the field season, then the spring was visited, but a sensor was not deployed during the visit. If there is no visit date associated with the field season, then the spring was not visited during that field season.
-
-``` {r nodeployment, fig.cap = capTab("Annual spring visits where a sensor was not deployed.")}
-nodata <- qcSensorsNotDeployed(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(nodata) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  nodata %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
-```
-
-### Sensors not recovered
-
-This table lists springs where a sensor previously deployed was not recovered. If there is a visit date associated with the field season, then the spring was visited, but a sensor was not recovered during the visit. If there is no visit date associated with the field season, then the spring was not visited during that field season.
-
-``` {r noretrieval, fig.cap = capTab("Annual spring visits where a sensor was not recovered.")}
-nodata <- qcSensorsNotRecovered(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(nodata) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(nodata, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- nodata$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            resizable = TRUE,
-            compact = TRUE,
-            striped = TRUE)
-}
-```
-
-### Problems with recovered sensors
-
-This table lists the sensors that were recovered with problems. Damaged sensors were recovered in the correct location, but showed obvious damage or tampering. Buried sensors were recovered in the correct location, but found buried under substrate, which could affect their ability to detect surface water presence. Outside water sensors were recovered in the correct location, but found laying outside of nearby surface water. This can happen when sensors are deployed when the spring is dry and the source has to be estimated, or when the source shifts between visits. Wrong location sensors were recovered but not from where they were originally installed. This can happen when flooding during heavy precipitation pulls bolts out of the substrate and washes sensors down stream.
-
-``` {r sensorproblems, fig.cap = capTab("Sensors that were recovered with one or more documented problems.")}
-problems <- qcSensorProblems(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(problems) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(problems, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- problems$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            resizable = TRUE,
-            compact = TRUE,
-            striped = TRUE)
-}
-```
-
-### Sensors both missing and downloaded
-
-This table lists sensors that were successfully downloaded but also recorded as missing. This situation can happen when a sensor is pulled into a rodent burrow or buried by sediment and is not able to be located, but is still near enough to connect via Bluetooth.
-
-``` {r missingsensors, fig.cap = capTab("Sensors that were downloaded but not recovered.")}
-missing <- qcMissingSensors(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(missing) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(missing, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- missing$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            resizable = TRUE,
-            compact = TRUE,
-            striped = TRUE)
-}
-```
-
-### Sensors recovered, download status unknown
-
-This table lists sensors that were recovered, but there is no data if they were successfully downloaded or not.
-
-``` {r sensordownloads, fig.cap = capTab("Sensors that were recovered and have unknown download status.")}
-downloads <- qcSensorDownloads(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(downloads) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(downloads, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- downloads$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            resizable = TRUE,
-            compact = TRUE,
-            striped = TRUE)
-}
-```
-
-### Recovery date same as deployment date
-
-This table lists sensors that have the same recovery and deployment dates. This may indicate an error during data entry.
-
-``` {r sensordates, fig.cap = capTab("Sensors with the same documented recovery and deployment dates.")}
-dates <- qcSensorDates(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(dates) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(dates, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- dates$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            resizable = TRUE,
-            compact = TRUE,
-            striped = TRUE)
-}
-```
-
-### Unknown sensor IDs
-
-This table lists deployed sensors whose sensor ID or serial number are unknown.
-
-``` {r unknownsensorids, fig.cap = capTab("Sensors that were deployed without recording the serial number or sensor ID.")}
-unkids <- qcUnknownSensorIDs(conn, data.source = "database")
-
-if (params$isAccessible == "yes") {
-  knitr::kable(unkids) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(unkids, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- unkids$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            resizable = TRUE,
-            compact = TRUE,
-            striped = TRUE)
-}
-```
-
-`r if(params$isAccessible == "yes") {"## Flow condition and water quantity"} else {"## Flow condition and water quantity {.tabset}"}`
+## Flow condition and water quantity {.tabset}
 
 Water quantity is the master variable in spring environments. The amount, timing, and duration of discharge control the character and extent of different aquatic habitats, the abundance of wetland plants that can be supported, and the ability of wildlife to access water for drinking.
 
 ### Spring discharge summary
 
-This table provides spring flow condition and either estimated or volumetric discharge for each visit.
+This table provides spring flow condition and either estimated discharge (discharge class) or volumetric discharge for each visit.
 
 ``` {r springdischarge, fig.cap = capTab("Spring flow condition, springbrook length, and discharge.")}
-springdischarge <- SpringDischarge(conn, data.source = "database")
-
-springdischarge %<>%
-  dplyr::rename(DischargeNotes = Notes) %>%
+springdischarge <- SpringDischarge() %>%
+  dplyr::select(-Panel) %>%
   tidyr::unite("Notes", c("DischargeNotes", "SpringbrookNotes"), remove = TRUE, na.rm = TRUE, sep = " ") %>%
   dplyr::mutate(Notes = case_when(Notes == "" ~ NA_character_,
                                   TRUE ~ Notes))
 
-if (params$isAccessible == "yes") {
-  knitr::kable(springdischarge) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(springdischarge, -Notes),
-            defaultColDef = colDef(minWidth = 150),
-            searchable = TRUE,
-            details = colDef(
+reactable::reactable(dplyr::select(springdischarge, -Notes),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- springdischarge$Notes[index]
@@ -923,11 +736,16 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
             wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Spring dry, discharge or springbrook > 0
@@ -935,16 +753,16 @@ if (params$isAccessible == "yes") {
 This table lists visits where the spring was recorded as dry, but either discharge or springbrook length were recorded as greater than 0.
 
 ``` {r drynonzero, fig.cap = capTab("Dry springs with recorded discharge or springbrook length.")}
-drynonzero <- qcSpringDryWater(conn, data.source = "database")
+drynonzero <- qcSpringDryWater() %>%
+  dplyr::select(-Panel) %>%
+  tidyr::unite("Notes", c("DischargeNotes", "SpringbrookNotes"), remove = TRUE, na.rm = TRUE, sep = " ") %>%
+  dplyr::mutate(Notes = case_when(Notes == "" ~ NA_character_,
+                                  TRUE ~ Notes))
 
-if (params$isAccessible == "yes") {
-  knitr::kable(drynonzero) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(drynonzero, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
+reactable::reactable(dplyr::select(drynonzero, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 50,
+                                   header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- drynonzero$Notes[index]
@@ -953,10 +771,14 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE)
 ```
 
 ### Spring not dry, discharge or springbrook = 0
@@ -964,16 +786,16 @@ if (params$isAccessible == "yes") {
 This table lists visits where the spring was not recorded as dry and discharge was recorded as 0 or where the spring was not recorded as dry or wet soil only and springbrook length was recorded as 0. The former situation can arise when wet soil is believed to result from recent rainfall or snowmelt as opposed to groundwater discharge. The latter condition can arise when there is water dripping from a pipe that is not enough to saturate the soil below.
 
 ``` {r notdrynowater, fig.cap = capTab("Non-dry springs without recorded discharge or springbrook length.")}
-notdrynowater <- qcSpringNotDryNoWater(conn, data.source = "database")
+notdrynowater <- qcSpringNotDryNoWater() %>%
+  dplyr::select(-Panel) %>%
+  tidyr::unite("Notes", c("DischargeNotes", "SpringbrookNotes"), remove = TRUE, na.rm = TRUE, sep = " ") %>%
+  dplyr::mutate(Notes = case_when(Notes == "" ~ NA_character_,
+                                  TRUE ~ Notes))
 
-if (params$isAccessible == "yes") {
-  knitr::kable(notdrynowater) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(notdrynowater, -Notes),
-            defaultColDef = colDef(minWidth = 150),
-            searchable = TRUE,
-            details = colDef(
+reactable::reactable(dplyr::select(notdrynowater, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 150,
+                                              header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- notdrynowater$Notes[index]
@@ -982,28 +804,31 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
             wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE)
 ```
 
 ### Discharge missing
 
-This table lists visits where estimated or volumetric discharge were not recorded.
+This table lists visits where estimated discharge (discharge class) or volumetric discharge were not recorded.
 
 ``` {r dischargemissing, fig.cap = capTab("Spring visits with missing discharge data.")}
-dischargemissing <- qcDischargeMissing(conn, data.source = "database")
+dischargemissing <- qcDischargeMissing() %>%
+  dplyr::select(-Panel) %>%
+  tidyr::unite("Notes", c("DischargeNotes", "SpringbrookNotes"), remove = TRUE, na.rm = TRUE, sep = " ") %>%
+  dplyr::mutate(Notes = case_when(Notes == "" ~ NA_character_,
+                                  TRUE ~ Notes))
 
-if (params$isAccessible == "yes") {
-  knitr::kable(dischargemissing) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(dischargemissing, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
+reactable::reactable(dplyr::select(dischargemissing, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 50,
+                                              header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- dischargemissing$Notes[index]
@@ -1012,10 +837,14 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE)
 ```
 
 ### Volumetric method data missing
@@ -1023,15 +852,20 @@ if (params$isAccessible == "yes") {
 This table lists visits where the volumetric method was used, but container volume, percent of flow, or fill time data were not recorded. Missing any one of these data types makes it impossible to calculate discharge.
 
 ``` {r volumetricmissing, fig.cap = capTab("Volumetric discharge measurements with missing volumetric data.")}
-volumetricmissing <- qcVolumetricMissing(conn, data.source = "database")
+volumetricmissing <- qcVolumetricMissing()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(volumetricmissing) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  volumetricmissing %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+volumetricmissing %>%
+    reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Volumetric method fills < 5
@@ -1039,15 +873,19 @@ if (params$isAccessible == "yes") {
 This table lists visits where the volumetric method was used, but there are fewer than 5 fill times. Typically, at least 5 fill times are necessary to reduce the effect of outliers on determining the median fill time.
 
 ``` {r fillevents, fig.cap = capTab("Volumetric discharge measurements with fewer than five fill times.")}
-fillevents <- qcVolumetricFillEvents(conn, data.source = "database")
+fillevents <- qcVolumetricFillEvents()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(fillevents) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  fillevents %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+fillevents %>%
+  reactable::reactable(wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Volumetric method median fill seconds < 5
@@ -1055,15 +893,19 @@ if (params$isAccessible == "yes") {
 This table lists visits where the volumetric method was used, but the median fill time was less than 5 seconds. Typically, fill times should be greater than 5 seconds to provide sufficient accuracy and precision.
 
 ``` {r filltimes, fig.cap = capTab("Volumetric discharge measurements with median fill time less than five seconds.")}
-filltimes <- qcVolumetricTimes(conn, data.source = "database")
+filltimes <- qcVolumetricTimes()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(filltimes) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  filltimes %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+filltimes %>%
+  reactable::reactable(wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Continuous > discontinuous
@@ -1071,55 +913,71 @@ if (params$isAccessible == "yes") {
 This table lists visits where continuous surface water length is greater than discontinuous surface water length. This results from error during data entry.
 
 ``` {r continuouslength, fig.cap = capTab("Continuous surface water length greater than discontinuous surface water length.")}
-continuouslength <- qcContinuousLength(conn, data.source = "database")
+continuouslength <- qcContinuousLength()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(continuouslength) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  continuouslength %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+continuouslength %>%
+  reactable::reactable(wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Continuous flow category summary
 
-This table summaries flow categories for the continuous portion of springbrooks.
+This table summarizes flow categories for the continuous portion of springbrooks.
 
 ``` {r flowcatcon, fig.cap = capTab("Flow category summaries for the continuous portion of springbrooks at each park.")}
-flowcatcon <- FlowCategoriesContinuous(conn, data.source = "database")
+flowcatcon <- FlowCategoriesContinuous() %>%
+  dplyr::select(-Panel)
 
-if (params$isAccessible == "yes") {
-  knitr::kable(flowcatcon) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  flowcatcon %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+flowcatcon %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Discontinuous flow category summary
 
-This table summaries flow categories for the discontinuous portion of springbrooks, where springbrook lengths are discontinuous, and the continuous portion of springbrooks, where springbrook lengths are continuous.
+This table summarizes flow categories for the discontinuous portion of springbrooks, where springbrook lengths are discontinuous, and the continuous portion of springbrooks, where springbrook lengths are continuous.
 
 ``` {r flowcatdiscon, fig.cap = capTab("Flow category summaries for the discontinuous portion of springbrooks at each park.")}
-flowcatdiscon <- FlowCategoriesDiscontinuous(conn, data.source = "database")
+flowcatdiscon <- FlowCategoriesDiscontinuous() %>%
+  dplyr::select(-Panel)
 
-if (params$isAccessible == "yes") {
-  knitr::kable(flowcatdiscon) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  flowcatdiscon %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+flowcatdiscon %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Flow categories annual plot
 
-This stacked bar plot summarizes flow categories for annual springs, using the discontinuous portion of springbrooks where applicable.
+This stacked bar plot summarizes flow categories for annual springs, using the discontinuous portion of springbrooks where applicable. Flow categories include dry, wet soil only, and three classes of springbrook length (m) when surface water is present.
 
 ``` {r flowcatannualplot, fig.cap = capFig("Stacked bar plot of flow categories at annual springs for each park.")}
-flowcatannualplot <- FlowCategoriesAnnualPlot(conn, data.source = "database")
+flowcatannualplot <- FlowCategoriesAnnualPlot()
 
 if (params$isAccessible == "yes") {
   flowcatannualplot
@@ -1135,12 +993,12 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-### Flow categories three-year plot
+### Flow categories 3-year plot
 
-This stacked bar plot summarizes flow categories for 3-year springs, using the discontinuous portion of springbrooks where applicable.
+This stacked bar plot summarizes flow categories for 3-year springs, using the discontinuous portion of springbrooks where applicable. Flow categories include dry, wet soil only, and three classes of springbrook length (m) when surface water is present.
 
 ``` {r flowcat3yrplot, fig.cap = capFig("Stacked bar plot of flow categories at 3-yr springs for each park.")}
-flowcat3yrplot <- FlowCategoriesThreeYearPlot(conn, data.source = "database")
+flowcat3yrplot <- FlowCategoriesThreeYearPlot()
 
 if (params$isAccessible == "yes") {
   flowcat3yrplot
@@ -1158,127 +1016,139 @@ if (params$isAccessible == "yes") {
 
 ### Flow categories annual heatmap
 
-This heatmap shows flow categories at each annual spring over all field seasons, using the discontinuous portion of springbrooks where applicable.
+This heatmap shows flow categories at each annual spring over all field seasons, using the discontinuous portion of springbrooks where applicable. Flow categories include dry, wet soil only, and three classes of springbrook length (m) when surface water is present.
 
 ``` {r flowcatannualheatmap.1, out.height = 600, fig.cap = capFig("Heatmap of flow categories at annual springs in DEVA."), warning = FALSE}
-flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(conn, park = "DEVA", data.source = "database")
+flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "DEVA")
 
 if (params$isAccessible == "yes") {
   flowcatannualheatmap
 } else {
-  ggplotly(flowcatannualheatmap, tooltip = "text")
+  ggplotly(flowcatannualheatmap, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.05)
 }
 ```
 
 ``` {r flowcatannualheatmap.2, out.height = 350, fig.cap = capFig("Heatmap of flow categories at annual springs in JOTR."), warning = FALSE}
-flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(conn, park = "JOTR", data.source = "database")
+flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "JOTR")
 
 if (params$isAccessible == "yes") {
   flowcatannualheatmap
 } else {
-  ggplotly(flowcatannualheatmap, tooltip = "text")
+  ggplotly(flowcatannualheatmap, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.05)
 }
 ```
 
 ``` {r flowcatannualheatmap.3, out.height = 350, fig.cap = capFig("Heatmap of flow categories at annual springs in LAKE.")}
-flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(conn, park = "LAKE", data.source = "database")
+flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "LAKE")
 
 if (params$isAccessible == "yes") {
   flowcatannualheatmap
 } else {
-  ggplotly(flowcatannualheatmap, tooltip = "text")
+  ggplotly(flowcatannualheatmap, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.05)
 }
 ```
 
 ``` {r flowcatannualheatmap.4, out.height = 350, fig.cap = capFig("Heatmap of flow categories at annual springs in MOJA.")}
-flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(conn, park = "MOJA", data.source = "database")
+flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "MOJA")
 
 if (params$isAccessible == "yes") {
   flowcatannualheatmap
 } else {
-  ggplotly(flowcatannualheatmap, tooltip = "text")
+  ggplotly(flowcatannualheatmap, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.05)
 }
 ```
 
 ``` {r flowcatannualheatmap.5, out.height = 350, fig.cap = capFig("Heatmap of flow categories at annual springs in PARA.")}
-flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(conn, park = "PARA", data.source = "database")
+flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "PARA")
 
 if (params$isAccessible == "yes") {
   flowcatannualheatmap
 } else {
-  ggplotly(flowcatannualheatmap, tooltip = "text")
+  ggplotly(flowcatannualheatmap, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.05)
 }
 ```
 
-### Flow categories three-year heatmap
+### Flow categories 3-year heatmap
 
-This heatmap shows flow categories at each three year spring over all field seasons, using the discontinuous portion of springbrooks where applicable.
+This heatmap shows flow categories at each 3-year spring over all field seasons, using the discontinuous portion of springbrooks where applicable. Flow categories include dry, wet soil only, and three classes of springbrook length (m) when surface water is present.
 
-``` {r flowcat3yrheatmap.1, out.height = 1450, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in DEVA.")}
-flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(conn, park = "DEVA", data.source = "database")
+``` {r flowcat3yrheatmap.1, out.height = 1450, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in DEVA.")}
+flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "DEVA")
 
 if (params$isAccessible == "yes") {
   flowcat3yrheatmap
 } else {
-  ggplotly(flowcat3yrheatmap, tooltip = "text")
+  ggplotly(flowcat3yrheatmap, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.05)
 }
 ```
 
-``` {r flowcat3yrheatmap.2, out.height = 650, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in DEVA.")}
-flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(conn, park = "JOTR", data.source = "database")
+``` {r flowcat3yrheatmap.2, out.height = 650, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in DEVA.")}
+flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "JOTR")
 
 if (params$isAccessible == "yes") {
   flowcat3yrheatmap
 } else {
-  ggplotly(flowcat3yrheatmap, tooltip = "text")
+  ggplotly(flowcat3yrheatmap, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.05)
 }
 ```
 
-``` {r flowcat3yrheatmap.3, out.height = 800, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in LAKE.")}
-flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(conn, park = "LAKE", data.source = "database")
+``` {r flowcat3yrheatmap.3, out.height = 800, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in LAKE.")}
+flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "LAKE")
 
 if (params$isAccessible == "yes") {
   flowcat3yrheatmap
 } else {
-  ggplotly(flowcat3yrheatmap, tooltip = "text")
+  ggplotly(flowcat3yrheatmap, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.05)
 }
 ```
 
-``` {r flowcat3yrheatmap.4, out.height = 800, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in MOJA.")}
-flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(conn, park = "MOJA", data.source = "database")
+``` {r flowcat3yrheatmap.4, out.height = 800, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in MOJA.")}
+flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "MOJA")
 
 if (params$isAccessible == "yes") {
   flowcat3yrheatmap
 } else {
-  ggplotly(flowcat3yrheatmap, tooltip = "text")
+  ggplotly(flowcat3yrheatmap, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.05)
 }
 ```
 
-``` {r flowcat3yrheatmap.5, out.height = 800, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in PARA.")}
-flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(conn, park = "PARA", data.source = "database")
+``` {r flowcat3yrheatmap.5, out.height = 800, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in PARA.")}
+flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "PARA")
 
 if (params$isAccessible == "yes") {
   flowcat3yrheatmap
 } else {
-  ggplotly(flowcat3yrheatmap, tooltip = "text")
+  ggplotly(flowcat3yrheatmap, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.05)
 }
 ```
 
 ### Flow category map
 
-This map shows flow categories at annual and three year springs, using the discontinuous portion of springbrooks where applicable. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
+This map shows flow categories at annual and 3-year springs, using the discontinuous portion of springbrooks where applicable. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r flowcatmap, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = capFig("Map of flow categories at springs in each park.")}
-if (params$isAccessible == "yes") {
-  flowcatmap_access <- FlowCategoriesMap(conn, interactive = "no", data.source = "database")
-  flowcatmap_access
-} else {
-  flowcatmap_interactive <- FlowCategoriesMap(conn, interactive = "yes", data.source = "database")
+``` {r flowcatmap, echo = FALSE, message = FALSE, warning = FALSE}
+# if (params$isAccessible == "yes") {
+#   flowcatmap_access <- FlowCategoriesMap(interactive = "no")
+#   flowcatmap_access
+# } else {
+  flowcatmap_interactive <- FlowCategoriesMap(interactive = "yes")
   flowcatmap_interactive
-}
+# }
 ```
 
-`r if(params$isAccessible == "yes") {"## Water quality"} else {"## Water quality {.tabset}"}`
+`r capFig("Map of flow categories at springs in each park.")`
+
+## Water quality {.tabset}
 
 Water quality includes four parameters: water temperature, specific conductance, pH, and dissolved oxygen. Water temperature influences many chemical and physical properties of water as well as the metabolic activity of aquatic organisms. Specific conductance is related to salinity and measures the concentration of dissolved ions in the water, which can help detect contamination or disturbance. pH affects the solubility and toxicity of chemicals and heavy metals in the water. Dissolved oxygen sustains aquatic organisms that breathe aerobically, including crustaceans, mollusks, insects, amphibians, and fish.
 
@@ -1287,15 +1157,20 @@ Water quality includes four parameters: water temperature, specific conductance,
 These are water quality values that fall above or below the ranges that we typically see in spring systems. These data are not necessarily incorrect, but they are outliers that should be evaluated using data quality flags and field notes. Wildly impossible values may be the result of instrument malfunction, improper calibration, or typos during data entry. The following records are included in the list below: temperature values greater than 30 C, pH values greater than 10 and less than 6, specific conductance values greater than 20000 uS/cm, dissolved oxygen percent values greater than 110% or less than 2%, and dissolved oxygen concentration values greater than 12 mg/L.
 
 ``` {r wqsanity, fig.cap = capTab("Water quality values that fall outside of expected ranges.")}
-wqsanity <- qcWqSanity(conn, data.source = "database")
+wqsanity <- qcWqSanity()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(wqsanity) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  wqsanity %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+wqsanity %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Water quality flags
@@ -1303,16 +1178,12 @@ if (params$isAccessible == "yes") {
 These are water quality values that have data quality flags. I = Information: These data do not have any suspected problems, but there may be information regarding the equipment or conditions in which they were collected that could inform their interpretation. W = Warning: These data are suspected to have problems and should only be used after careful assessment of instrument and environmental factors. C = Critical: These data are suspected to have serious problems and are likely unusable.
 
 ``` {r wqflags, fig.cap = capTab("Water quality values that have data quality flags.")}
-wqflags <- qcWqFlags(conn, data.source = "database")
+wqflags <- qcWqFlags()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(wqflags) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(wqflags, -FlagNote),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
+reactable::reactable(dplyr::select(wqflags, -FlagNote),
+            defaultColDef = reactable::colDef(minWidth = 50,
+                                              header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- wqflags$FlagNote[index]
@@ -1321,10 +1192,14 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,)
 ```
 
 ### Local dissolved oxygen calibration
@@ -1332,15 +1207,20 @@ if (params$isAccessible == "yes") {
 This table lists visits where dissolved oxygen percent was not calibrated to local dissolved oxygen. When calibrating to local dissolved oxygen, the calibration value is 100% regardless of the barometric pressure at the time of calibration. The 100% calibration value for this convention reflects the fact that the calibration environment is at 100% oxygen pressure for that specific location.
 
 ``` {r docalcheck, fig.cap = capTab("Calibration events where dissolved oxygen was not calibrated to local dissolved oxygen.")}
-localdo <- qcLocalDOCheck(conn, data.source = "database")
+localdo <- qcLocalDOCheck()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(localdo) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  localdo %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+localdo %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Specific conductance standards
@@ -1348,147 +1228,174 @@ if (params$isAccessible == "yes") {
 This table lists visits where the specific conductance standard used during calibration was much lower than the in-situ reading of specific conductance at the spring. Ideally, specific conductance standards of 10,000 uS/cm or even 50,000 uS/cm should be used at springs with consistently higher specific conductance readings.
 
 ``` {r spcondstandardcheck, fig.cap = capTab("Calibration events where specific conductance was calibrated to a standard much lower than the in-situ reading at the spring.")}
-scstandard <- qcSpCondStandardCheck(conn, data.source = "database")
+scstandard <- qcSpCondStandardCheck()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(scstandard) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  scstandard %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+scstandard %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Water quality summary statistics
 
-This table summarizes the median and quartile values for each water quality parameter for each park and field season. Data flagged as “Warning” or “Critical” are not included.
+This table summarizes the median and quartile values for each water quality parameter for each park and field season during the reporting period. Both annual and 3-year springs are included. Data flagged as “Warning” or “Critical” are not included.
 
 ``` {r wqstats, fig.cap = capTab("Water quality median and quartile values for each park and field season.")}
-wqstats <- WqStats(conn, data.source = "database")
+wqstats <- WqStats()
 
 wqstats %<>% dplyr::filter(Park != "CAMO")
 
-if (params$isAccessible == "yes") {
-  knitr::kable(wqstats) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  wqstats %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+wqstats %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Water temperature box plot
 
-These box plots show the median and quartile values for water temperature (C) for each park and 3-year cycle. Data flagged as “Warning” or “Critical” are not included.
+These box plots show the median and quartile values for water temperature (C) for each park and 3-year cycle during the reporting period. Both annual and 3-year springs are included in the 3-year cycles. Data flagged as “Warning” or “Critical” are not included.
 
 ``` {r tempplot, message = FALSE, fig.cap = capFig("Box plots of water temperature quartiles for each park and 3-year cycle.")}
-tempplot <- WqPlotTemp(conn, data.source = "database")
+tempplot <- WqPlotTemp()
 
 if (params$isAccessible == "yes") {
     tempplot
 } else {
-    ggplotly(tempplot)
+    ggplotly(tempplot) %>%
+    layout_ggplotly(x = -0.04, y = -0.01)
 }
 ```
 
 ### Specific conductance box plot
 
-These box plots show the median and quartile values for specific conductance (uS/cm) for each park and year. Data flagged as “Warning” or “Critical” are not included.
+These box plots show the median and quartile values for specific conductance (uS/cm) for each park and 3-year cycle during the reporting period. Both annual and 3-year springs are included in the 3-year cycles. Data flagged as “Warning” or “Critical” are not included.
 
 ``` {r spcondplot, message = FALSE, warning = FALSE, fig.cap = capFig("Box plots of specific conductance quartiles for each park and 3-year cycle.")}
-spcondplot <- WqPlotSpCond(conn, data.source = "database")
+spcondplot <- WqPlotSpCond()
 
 if (params$isAccessible == "yes") {
     spcondplot
 } else {
-    ggplotly(spcondplot)
+    ggplotly(spcondplot) %>%
+    layout_ggplotly(x = -0.04, y = -0.01)
 }
 ```
 
 ### pH box plot
 
-These box plots show the median and quartile values for pH for each park and year. Data flagged as “Warning” or “Critical” are not included.
+These box plots show the median and quartile values for pH for each park and 3-year cycle during the reporting period. Both annual and 3-year springs are included in the 3-year cycles. Data flagged as “Warning” or “Critical” are not included.
 
 ``` {r phplot, message = FALSE, fig.cap = capFig("Box plots of pH quartiles for each park and 3-year cycle.")}
-phplot <- WqPlotPH(conn, data.source = "database")
+phplot <- WqPlotPH()
 
 if (params$isAccessible == "yes") {
     phplot
 } else {
-    ggplotly(phplot)
+    ggplotly(phplot) %>%
+    layout_ggplotly(x = -0.04, y = -0.01)
 }
 ```
 
 ### Dissolved oxygen box plot
 
-These box plots show the median and quartile values for dissolved oxygen concentration (mg/L) for each park and year. Data flagged as “Warning” or “Critical” are not included.
+These box plots show the median and quartile values for dissolved oxygen concentration (mg/L) for each park and 3-year cycle during the reporting period. Both annual and 3-year springs are included in the 3-year cycles. Data flagged as “Warning” or “Critical” are not included.
 
 ``` {r doplot, message = FALSE, fig.cap = capFig("Box plots of dissolved oxygen concentration quartiles for each park and 3-year cycle.")}
-tempplot <- WqPlotDOmgL(conn, data.source = "database")
+tempplot <- WqPlotDOmgL()
 
 if (params$isAccessible == "yes") {
     tempplot
 } else {
-    ggplotly(tempplot)
+    ggplotly(tempplot) %>%
+    layout_ggplotly(x = -0.04, y = -0.01)
 }
 ```
 
 ### Water temperature map
 
-This map shows water temperature (C) at annual and three year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
+This map shows water temperature (C) at annual and 3-year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r tempmap, message = FALSE, fig.cap = capFig("Map of water temperature readings at springs in each park.")}
-tempmap <- WqMapTemp(conn, data.source = "database")
+``` {r tempmap, message = FALSE}
+tempmap <- WqMapTemp()
 
 tempmap
 ```
 
+`r capFig("Map of water temperature readings at springs in each park.")`
+
 ### Specific conductance map
 
-This map shows specific conductance (uS/cm) at annual and three year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
+This map shows specific conductance (uS/cm) at annual and 3-year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r spcondmap, message = FALSE, fig.cap = capFig("Map of specific conductance readings at springs in each park.")}
-spcondmap <- WqMapSpCond(conn, data.source = "database")
+``` {r spcondmap, message = FALSE}
+spcondmap <- WqMapSpCond()
 
 spcondmap
 ```
 
+`r capFig("Map of specific conductance readings at springs in each park.")`
+
 ### pH map
 
-This map shows pH at annual and three year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
+This map shows pH at annual and 3-year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r phpmap, message = FALSE, fig.cap = capFig("Map of pH readings at springs in each park.")}
-phmap <- WqMapPH(conn, data.source = "database")
+``` {r phpmap, message = FALSE}
+phmap <- WqMapPH()
 
 phmap
 ```
 
+`r capFig("Map of pH readings at springs in each park.")`
+
 ### Dissolved oxygen map
 
-This map shows dissolved oxygen concentration (mg/L) at annual and three year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
+This map shows dissolved oxygen concentration (mg/L) at annual and 3-year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r domap, message = FALSE, fig.cap = capFig("Map of dissolved oxygen concentration readings at springs in each park.")}
-domap <- WqMapDO(conn, data.source = "database")
+``` {r domap, message = FALSE}
+domap <- WqMapDO()
 
 domap
 ```
 
-`r if(params$isAccessible == "yes") {"## Riparian vegetation"} else {"## Riparian vegetation {.tabset}"}`
+`r capFig("Map of dissolved oxygen concentration readings at springs in each park.")`
+
+## Riparian vegetation {.tabset}
 
 ### Vegetation present, no lifeforms
 
 This table lists visits where vegetation was recorded as present, but no lifeforms were documented.
 
 ``` {r vegnolife, fig.cap = capTab("Vegetation present but no lifeforms documented.")}
-vegnolife <- qcVegPresentNoLifeforms(conn, data.source = "database")
+vegnolife <- qcVegPresentNoLifeforms()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(vegnolife) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  vegnolife %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+vegnolife %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### No vegetation observed, lifeforms present
@@ -1496,15 +1403,20 @@ if (params$isAccessible == "yes") {
 This table lists visits where vegetation was not recorded as present, but lifeforms were documented.
 
 ``` {r noveglife, fig.cap = capTab("Vegetation not present but one or more lifeforms documented.")}
-noveglife <- qcNoVegLifeformsPresent(conn, data.source = "database")
+noveglife <- qcNoVegLifeformsPresent()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(noveglife) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  noveglife %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+noveglife %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Lifeform present, no rank
@@ -1512,15 +1424,20 @@ if (params$isAccessible == "yes") {
 This table lists visits where one or more lifeforms are missing a rank.
 
 ``` {r lifenorank, fig.cap = capTab("Vegetation lifeform documented but missing rank.")}
-lifenorank <- qcLifeformPresentNoRank(conn, data.source = "database")
+lifenorank <- qcLifeformPresentNoRank()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(lifenorank) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  lifenorank %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+lifenorank %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Lifeform rank check
@@ -1528,15 +1445,20 @@ if (params$isAccessible == "yes") {
 This table lists visits where multiple life forms have the same rank, and rank gaps have not been properly entered.
 
 ``` {r rankcheck, fig.cap = capTab("Spring visits where vegetation lifeform ranks have been incorrectly documented.")}
-rankcheck <- qcLifeformRankCheck(conn, data.source = "database")
+rankcheck <- qcLifeformRankCheck()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(rankcheck) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  rankcheck %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+rankcheck %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Lifeform observations
@@ -1544,28 +1466,34 @@ if (params$isAccessible == "yes") {
 This table counts the number of springs where each lifeform was observed in each park and field season.
 
 ``` {r lifeformobservations, fig.cap = capTab("Vegetation lifeform observations for each park and field season.")}
-lifeformobservations <- LifeformsPresence(conn, data.source = "database")
+lifeformobservations <- LifeformsPresence()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(lifeformobservations) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  lifeformobservations %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+lifeformobservations %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Lifeforms per spring plot
 
-This bar plot shows the number of different lifeforms that were observed at springs in each park across all field seasons. The black vertical line indicates the median number of different lifeforms at springs in each park across all field seasons, while the red dashed line indicates the mean number of different lifeforms at springs in each park across all field seasons.
+This bar plot shows counts of the number of different lifeforms that were observed at springs for each park and 3-year cycle during the reporting period. Both annual and 3-year springs are included in the 3-year cycles. The black vertical line indicates the median number of different lifeforms at springs in each park, while the red dashed line indicates the mean number of different lifeforms at springs in each park.
 
-``` {r lifeformsperspringplot, fig.height = 8, warning = FALSE, fig.cap = capTab("Vegetation lifeform observations for each park and field season.")}
-lifeformsperspringplot <- LifeformsPerSpringPlot(conn, data.source = "database")
+``` {r lifeformsperspringplot, fig.height = 8, warning = FALSE, fig.cap = capFig("Bar plots showing count of number of different vegetation lifeforms observed for each park and 3-year cycle.")}
+lifeformsperspringplot <- LifeformsPerSpringPlot()
 
 if (params$isAccessible == "yes") {
   lifeformsperspringplot
 } else {
-  p <- ggplotly(lifeformsperspringplot, tooltip = c("text"))
+  p <- ggplotly(lifeformsperspringplot, tooltip = c("text")) %>%
+    layout_ggplotly(x = 0, y = 0)
   
   # Get the names of the legend entries
   df <- data.frame(id = seq_along(p$x$data), legend_entries = unlist(lapply(p$x$data, `[[`, "name")))
@@ -1591,33 +1519,30 @@ if (params$isAccessible == "yes") {
 
 This bar plot shows the number of observations of each lifeform in each park across all field seasons. Lifeforms are sorted by most common to least common in each park.
 
-``` {r lifeformsobservationsplot, fig.height = 10}
-lifeformsobservationsplot <- MostCommonLifeformsPlot(conn, data.source = "database")
+``` {r lifeformsobservationsplot, fig.height = 10, fig.cap = capFig("Box plots showing count of vegetation lifeform categories observed for each park and 3-year cycle.")}
+lifeformsobservationsplot <- MostCommonLifeformsPlot()
 
 if (params$isAccessible == "yes") {
   lifeformsobservationsplot
 } else {
-  ggplotly(lifeformsobservationsplot, tooltip = "text")
+  ggplotly(lifeformsobservationsplot, tooltip = "text") %>%
+    layout_ggplotly(x = 0, y = -0.04)
 }
 ```
 
-`r if(params$isAccessible == "yes") {"## Invasive plants"} else {"## Invasive plants {.tabset}"}`
+## Invasive plants {.tabset}
 
 ### Targeted invasive plants presence
 
-This table lists visits where targeted invasive plants were observed. Targeted invasive plants include saltcedar (Tamarix ramosissima), California fan palm (Washingtonia filifera), data palm (Phoenix dactylifera), and fountain grass (Pennisetum setaceum). California fans palms are native to Joshua Tree National Park, so any observations there are not included in this table.
+This table lists visits where targeted invasive plants were observed. Targeted invasive plants include saltcedar (*Tamarix ramosissima*), California fan palm (*Washingtonia filifera*), data palm (*Phoenix dactylifera*), and fountain grass (*Pennisetum setaceum*). California fans palms are native to Joshua Tree National Park, so any observations there are not included in this table.
 
-``` {r invplants}
-invplants <- InvasivePlants(conn, data.source = "database")
+``` {r invplants, fig.cap = capTab("Targeted invasive plants observed at springs.")}
+invplants <- InvasivePlants()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(invplants) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(invplants, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
+reactable::reactable(dplyr::select(invplants, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 50,
+                                              header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- invplants$Notes[index]
@@ -1626,110 +1551,141 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,)
 ```
 
 ### Targeted invasive plants map
 
 This map shows observations of targeted invasive plant species. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r invplantmap, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "Map of targeted invasive plant observations for each field season at each park."}
-invplantmap <- InvasivePlantsMap(conn, data.source = "database")
+``` {r invplantmap, echo = FALSE, message = FALSE, warning = FALSE}
+invplantmap <- InvasivePlantsMap()
 
 invplantmap
 ```
 
-`r if(params$isAccessible == "yes") {"## Flow modification and disturbance"} else {"## Flow modification and disturbance {.tabset}"}`
+`r capFig("Map of targeted invasive plants observed at springs in each park.")`
+
+## Flow modification and disturbance {.tabset}
 
 ### Overall disturbance < any other disturbance category
 
 This table lists visits where overall disturbance was less than any other disturbance category. This indicates error during data entry.
 
-``` {r overalldisturbance}
-overalldisturbance <- qcOverallDisturbance(conn, data.source = "database")
+``` {r overalldisturbance, fig.cap = capTab("Overall disturbance less than any other disturbance category.")}
+overalldisturbance <- qcOverallDisturbance()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(overalldisturbance) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  overalldisturbance %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+overalldisturbance %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Flow modification exists, no Human Use disturbance recorded
 
 This table lists visits were flow modification exists, but no human use disturbance was recorded at the spring.
 
-``` {r flowmodnohuman}
-flowmodnohuman <- qcFlowModNoHuman(conn, data.source = "database")
+``` {r flowmodnohumanuse, fig.cap = capTab("Flow modification present, but no human use disturbance recorded.")}
+flowmodnohumanuse <- qcFlowModNoHumanUse()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(flowmodnohuman) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  flowmodnohuman %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+flowmodnohumanuse %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Flow modification discrepancies
 
 This table provides a list of springs where different flow modification types have been recorded during different visits. This may happen if a flow modification type is overlooked in one or more field seasons, a spring source shifts, or a different area around the spring source is searched during a visit.
 
-``` {r flowmoddiscrepancies}
-flowmoddiscrepancies <- qcFlowModDiscrepancies(conn, data.source = "database")
+``` {r flowmoddiscrepancies, fig.cap = capTab("Springs that have been assigned different flow modification types during different visits.")}
+flowmoddiscrepancies <- qcFlowModDiscrepancies()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(flowmoddiscrepancies) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  flowmoddiscrepancies %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+flowmoddiscrepancies %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Springs with active or historic flow modification
 
 This table lists springs where active or inactive (historical) flow modification was observed in each field season.
 
-``` {r flowmodstatus}
-flowmodstatus <- FlowModStatus(conn, data.source = "database")
+``` {r flowmodstatus, fig.cap = capTab("Springs where active or inactive (historical) flow modification have been observed.")}
+flowmodstatus <- FlowModStatus()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(flowmodstatus) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  flowmodstatus %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+flowmodstatus %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Flow modification summary
 
-This table lists the number and percentage of springs where active, inactive (historical), or no flow modification have been observed. In situations where there are discrepancies in flow modification observations across different field seasons, the most active disturbance is included.
+This table lists the number and percentage of springs where active, inactive (historical), or no flow modification have been observed. In situations where there are discrepancies in flow modification observations at a spring across different field seasons, the highest level of modification has been counted.
 
-``` {r flowmodcount}
-flowmodcount <- FlowModCount(conn, data.source = "database")
+``` {r flowmodcount, fig.cap = capTab("Number and percentage of springs with flow modification in each park.")}
+flowmodcount <- FlowModCount()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(flowmodcount) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  flowmodcount %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+flowmodcount %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Flow modification bar plot
 
-This bar plot shows the percentage of springs in each park where active, inactive (historical), or no flow modification have observed. In situations where there are discrepancies in flow modification observations across different field seasons, the most active disturbance is included.
+This bar plot shows the percentage of springs in each park where active, inactive (historical), or no flow modification have been observed. In situations where there are discrepancies in flow modification observations at a spring across different field seasons, the highest level of modification has been counted.
 
-``` {r flowmodplot}
-flowmodplot <- FlowModPlot(conn, data.source = "database")
+``` {r flowmodplot, fig.cap = capFig("Stacked bar plot of flow modification status at springs in each park.")}
+flowmodplot <- FlowModPlot()
 
 if (params$isAccessible == "yes") {
   flowmodplot
@@ -1740,35 +1696,36 @@ if (params$isAccessible == "yes") {
 
 ### Disturbance summary
 
-This table lists the number and percentage of springs where human use or livestock disturbance have been observed. In situations where disturbance is not observed in all years, ___________________.
+This table lists the number and percentage of springs where human use or livestock disturbance have been observed. Disturbance at a spring is counted if it has been observed at least once during the reporting period.
 
-``` {r disturbcount}
-disturbcount <- DisturbanceCount(conn, data.source = "database")
+``` {r disturbcount, fig.cap = capTab("Number and percentage of springs with human use or livestock disturbance in each park.")}
+disturbcount <- DisturbanceCount()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(disturbcount) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  disturbcount %>%
-    reactable(searchable = TRUE, compact = TRUE, striped = TRUE)
-}
+disturbcount %>%
+  reactable::reactable(
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
 ```
 
 ### Human use presence
 
 This table lists visits where human use disturbance was recorded at a spring.
 
-``` {r humanuseobs}
-humanuseobs <- HumanUseObservations(conn, data.source = "database")
+``` {r humanuseobs, fig.cap = capTab("Human use disturbance observed at springs.")}
+humanuseobs <- HumanUseObservations()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(humanuseobs) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(humanuseobs, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
+reactable::reactable(dplyr::select(humanuseobs, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 50,
+                                       header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- humanuseobs$Notes[index]
@@ -1777,18 +1734,22 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE)
 ```
 
 ### Human use plot
 
 This bar plot shows the percentage of springs in each park where human use disturbance was observed.
 
-``` {r humanuseplot}
-humanuseplot <- HumanUsePlot(conn, data.source = "database")
+``` {r humanuseplot, fig.cap = capFig("Bar plots of human use disturbance observed at springs in each park.")}
+humanuseplot <- HumanUsePlot()
 
 if (params$isAccessible == "yes") {
   humanuseplot
@@ -1801,27 +1762,25 @@ if (params$isAccessible == "yes") {
 
 This map shows where human use disturbance was observed. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r humanusemap, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "Map of human use disturbance observations for each field season at each park."}
-humanusemap <- HumanUseMap(conn, data.source = "database")
+``` {r humanusemap, echo = FALSE, message = FALSE, warning = FALSE}
+humanusemap <- HumanUseMap()
 
 humanusemap
 ```
+
+`r capFig("Map of human use disturbance observed at springs in each park.")`
 
 ### Livestock presence
 
 This table lists visits where livestock disturbance was recorded at a spring.
 
-``` {r livestockobs}
-livestockobs <- LivestockObservations(conn, data.source = "database")
+``` {r livestockobs, fig.cap = capTab("Livestock disturbance observed at springs.")}
+livestockobs <- LivestockObservations()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(livestockobs) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(livestockobs, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
+reactable(dplyr::select(livestockobs, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 50,
+                                       header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- livestockobs$Notes[index]
@@ -1830,18 +1789,22 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE)
 ```
 
 ### Livestock plot
 
 This bar plot shows the percentage of springs in each park where livestock disturbance was observed.
 
-``` {r livestockplot}
-livestockplot <- LivestockPlot(conn, data.source = "database")
+``` {r livestockplot, fig.cap = capFig("Bar plots of livestock disturbance observed at springs in each park.")}
+livestockplot <- LivestockPlot()
 
 if (params$isAccessible == "yes") {
   livestockplot
@@ -1854,29 +1817,27 @@ if (params$isAccessible == "yes") {
 
 This map shows where livestock disturbance was observed. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r livestockmap, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "Map of livestock disturbance observations for each field season at each park."}
-livestockmap <- LivestockMap(conn, data.source = "database")
+``` {r livestockmap, echo = FALSE, message = FALSE, warning = FALSE}
+livestockmap <- LivestockMap()
 
 livestockmap
 ```
 
-`r if(params$isAccessible == "yes") {"## Wildlife evidence"} else {"## Wildlife evidence {.tabset}"}`
+`r capFig("Map of livestock disturbance observed at springs in each park.")`
+
+## Wildlife evidence {.tabset}
 
 ### Wildlife observed, no types recorded
 
 This table lists visits where wildlife was observed, but no wildlife type was specified.
 
-``` {r wildlifenotype}
-wildlifenotype <- qcWildlifeObservedNoTypes(conn, data.source = "database")
+``` {r wildlifenotype, fig.cap = capTab("Wildlife was observed, but no wildlife type was specified.")}
+wildlifenotype <- qcWildlifeObservedNoTypes()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(wildlifenotype) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(wildlifenotype, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
+reactable(dplyr::select(wildlifenotype, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 50,
+                                       header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- wildlifenotype$Notes[index]
@@ -1885,27 +1846,27 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
+            wrap = FALSE,  
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE)
 ```
 
 ### Wildlife type specified, no evidence recorded
 
 This table lists visits where wildlife type was specified, but no evidence type was recorded.
 
-``` {r wildlifenoevidence}
-wildlifenoevidence <- qcWildlifeObservedNoEvidence(conn, data.source = "database")
+``` {r wildlifenoevidence, fig.cap = capTab("Wildlife type was specified, but no evidence type was recorded.")}
+wildlifenoevidence <- qcWildlifeObservedNoEvidence()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(wildlifenoevidence) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(wildlifenoevidence, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
+reactable(dplyr::select(wildlifenoevidence, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 50,
+                                       header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- wildlifenoevidence$Notes[index]
@@ -1914,27 +1875,27 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE)
 ```
 
 ### Ungulates evidence
 
 This table lists visits were evidence of ungulate (sheep or deer) activity was observed at a spring. Evidence can include direct observation, tracks, or scat.
 
-``` {r ungulatesevidence}
-ungulatesevidence <- UngulatesEvidence(conn, data.source = "database")
+``` {r ungulatesevidence, fig.cap = capTab("Ungulate activity observed at springs.")}
+ungulatesevidence <- UngulatesEvidence()
 
-if (params$isAccessible == "yes") {
-  knitr::kable(ungulatesevidence) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE, position = "left")
-} else {
-  reactable(dplyr::select(ungulatesevidence, -Notes),
-            defaultColDef = colDef(minWidth = 50),
-            searchable = TRUE,
-            details = colDef(
+reactable(dplyr::select(ungulatesevidence, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 50,
+                                       header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
               name = "Notes",
               details = function(index) {
                 note <- ungulatesevidence$Notes[index]
@@ -1943,29 +1904,43 @@ if (params$isAccessible == "yes") {
                 }
               }
             ),
-            resizable = TRUE,
+            wrap = FALSE,
+            sortable = TRUE,
+            filterable = TRUE,
             compact = TRUE,
-            striped = TRUE)
-}
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE)
 ```
 
 ### Ungulates evidence map
 
 This map shows where evidence of ungulate (sheep or deer) activity was observed. Evidence can include direction observation, tracks, or scat. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r ungulatesmap, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "Map of targeted invasive plant observations for each field season at each park."}
-ungulatesmap <- UngulatesMap(conn, data.source = "database")
+``` {r ungulatesmap, echo = FALSE, message = FALSE, warning = FALSE}
+ungulatesmap <- UngulatesMap()
 
 ungulatesmap
 ```
+
+`r capFig("Map of ungulate activity observed at springs in each park.")`
 
 # Usage Notes
 A MOJN Desert Springs R Package that is designed to work with the datasets in their published format is available on GitHub. This package was used to implement the quality checks that are included in this report and to generate the three calculated datasets that are included in this data package.
 
 # Acknowledgements
-The authors would like to acknowledge Geoff Moret, who developed the Desert Springs protocol.
+The authors would like to acknowledge Geoff Moret, who developed the Desert Springs protocol. We would also like to thank Lise Grace for providing review and editing assistance on this data release report.
 
 # References
+
+Bailard J.L., Moret G.J., Lehman M., Hupp N.R., Tallent N.G., Calvert A.W. 2018. Springs in the Mojave Desert Network—Surface water monitoring at desert springs: Standard operating procedures version 1.0. National Park Service. Fort Collins, Colorado. Available at: https://irma.nps.gov/DataStore/Reference/Profile/2256063
+
+Bredehoeft, J. and T. Durbin. 2009. Ground water development -- the time to full capture problem. Ground Water: Vol. 47, Iss. 4, pp. 506–514. Available at: http://water.nv.gov/Hearings/past/Spring%20-%20Cave%20-%20Dry%20Lake%20and%20Delamar%20Valleys%202011/Exhibits/GBWN%20Exhibits/GBWN_Exh_012%20Bredehoeft%20Durbin_Ground%20Water%202009.pdf.
+
+Gonzalez, P., G.M. Garfin, D.D. Breshears, K.M. Brooks, H.E. Brown, E.H. Elias, A. Gunasekara, N. Huntly, J.K. Maldonado, N.J. Mantua, H.G. Margolis, S. McAfee, B.R. Middleton, and B.H. Udall. 2018. Southwest. In Impacts, Risks, and Adaptation in the United States: Fourth National Climate Assessment, Volume II [Reidmiller, D.R., C.W. Avery, D.R. Easterling, K.E. Kunkel, K.L.M. Lewis, T.K. Maycock, and B.C. Stewart (eds.)]. U.S. Global Change Research Program, Washington, DC: pp. 1101–1184. doi: 10.7930/NCA4.2018.CH25. Available at: https://nca2018.globalchange.gov/chapter/25/
+
+Moret G.J., Bailard J.L., Lehman M., Hupp N.R., Tallent N.G., Calvert A.W. 2018. Springs in the Mojave Desert Network—Surface water monitoring at desert springs: Protocol narrative version 1.0. Natural Resource Report. NPS/MOJN/NRR—2018/1718. National Park Service. Fort Collins, Colorado. Available at: https://irma.nps.gov/DataStore/Reference/Profile/2254900
 
 \pagebreak
 
@@ -1979,12 +1954,4 @@ The authors would like to acknowledge Geoff Moret, who developed the Desert Spri
 ```{r session-info, echo=FALSE, cache=FALSE}
 sessionInfo()
 Sys.time()
-```
-
-``` {r close.db}
-# if (params$dataSource == "database") {
-#    CloseDatabaseConnection(conn)
-# }
-
-CloseDatabaseConnection(conn)
 ```
