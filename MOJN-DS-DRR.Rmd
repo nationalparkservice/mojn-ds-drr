@@ -257,9 +257,9 @@ alt_text <- c("Small, muddy puddle emerges from hillside, with cattle activity i
               "Shallow springbrook emerges from a qanat, with active pipe diversion and cattle activity in the spring.",
               "Small pool supporting goldenrods emerges from a very steep hillside with little other vegetation around.",
               "High discharge spring flows over a waterfall into a large, deep pool in a narrow canyon. The canyon is full of lush riparian vegetation, including cattails, monkeyflowers, grapevines, willows, and ferns.",
-              "Small, shallow pool emerges in the middle of sparse desert shrubland and flows for a few meters downslope.",
+              "Small, shallow pool emerges in the middle of sparse desert shrubland and flows for a few meters down a gradual slope.",
               "Water seeps out of contacts between bedrock layers, with active pipe diversion of the seepage.",
-              "Long, narrow springbrook winds through a salt flat devoid of vegetation.",
+              "Long, narrow springbrook winds through a crusty salt flat devoid of vegetation.",
               "Shallow springbrook is covered by aquatic plants in the shade of large cottonwood trees and other woody vegetation.",
               "Dry spring is situated in a sandy wash below cluster of fan palms in a bouldery canyon.")
 
@@ -386,7 +386,7 @@ All of the code used in the preparation of this data package is available in the
 # Data Records
 The published product is one data package containing multiple CSV data files:
 
-* **`r params$dataPackage1Title`.** Comma-separated text files containing data from the MOJN I&M Desert Springs protocol. These data were compiled by the MOJN I&M and were last updated on `r params$date`. Available at `r paste0("https://irma.nps.gov/DataStore/Reference/Profile/", params$dataPackage1RefID)`. 
+* **`r params$dataPackage1Title`.** Comma-separated text files containing data from the MOJN I&M Desert Springs protocol. These data were compiled by the MOJN I&M and were last updated on `r format(Sys.Date(), '%B %d, %Y')`. Available at `r paste0("https://irma.nps.gov/DataStore/Reference/Profile/", params$dataPackage1RefID)`. 
 
 Twenty CSV data files contain raw values suitable for use with the MOJN I&M Desert Springs R package (Table 2).
 
@@ -1018,7 +1018,7 @@ if (params$isAccessible == "yes") {
 
 This heatmap shows flow categories at each annual spring over all field seasons, using the discontinuous portion of springbrooks where applicable. Flow categories include dry, wet soil only, and three classes of springbrook length (m) when surface water is present.
 
-``` {r flowcatannualheatmap.1, out.height = 600, fig.cap = capFig("Heatmap of flow categories at annual springs in DEVA."), warning = FALSE}
+``` {r flowcatannualheatmap.1, fig.cap = capFig("Heatmap of flow categories at annual springs in DEVA."), warning = FALSE}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "DEVA")
 
 if (params$isAccessible == "yes") {
@@ -1029,7 +1029,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcatannualheatmap.2, out.height = 350, fig.cap = capFig("Heatmap of flow categories at annual springs in JOTR."), warning = FALSE}
+``` {r flowcatannualheatmap.2, fig.cap = capFig("Heatmap of flow categories at annual springs in JOTR."), warning = FALSE}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "JOTR")
 
 if (params$isAccessible == "yes") {
@@ -1040,7 +1040,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcatannualheatmap.3, out.height = 350, fig.cap = capFig("Heatmap of flow categories at annual springs in LAKE.")}
+``` {r flowcatannualheatmap.3, fig.cap = capFig("Heatmap of flow categories at annual springs in LAKE.")}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "LAKE")
 
 if (params$isAccessible == "yes") {
@@ -1051,7 +1051,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcatannualheatmap.4, out.height = 350, fig.cap = capFig("Heatmap of flow categories at annual springs in MOJA.")}
+``` {r flowcatannualheatmap.4, fig.cap = capFig("Heatmap of flow categories at annual springs in MOJA.")}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "MOJA")
 
 if (params$isAccessible == "yes") {
@@ -1062,7 +1062,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcatannualheatmap.5, out.height = 350, fig.cap = capFig("Heatmap of flow categories at annual springs in PARA.")}
+``` {r flowcatannualheatmap.5, fig.cap = capFig("Heatmap of flow categories at annual springs in PARA.")}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "PARA")
 
 if (params$isAccessible == "yes") {
@@ -1077,7 +1077,7 @@ if (params$isAccessible == "yes") {
 
 This heatmap shows flow categories at each 3-year spring over all field seasons, using the discontinuous portion of springbrooks where applicable. Flow categories include dry, wet soil only, and three classes of springbrook length (m) when surface water is present.
 
-``` {r flowcat3yrheatmap.1, out.height = 1450, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in DEVA.")}
+``` {r flowcat3yrheatmap.1, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in DEVA.")}
 flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "DEVA")
 
 if (params$isAccessible == "yes") {
@@ -1088,7 +1088,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcat3yrheatmap.2, out.height = 650, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in DEVA.")}
+``` {r flowcat3yrheatmap.2, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in DEVA.")}
 flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "JOTR")
 
 if (params$isAccessible == "yes") {
@@ -1099,7 +1099,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcat3yrheatmap.3, out.height = 800, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in LAKE.")}
+``` {r flowcat3yrheatmap.3, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in LAKE.")}
 flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "LAKE")
 
 if (params$isAccessible == "yes") {
@@ -1110,7 +1110,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcat3yrheatmap.4, out.height = 800, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in MOJA.")}
+``` {r flowcat3yrheatmap.4, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in MOJA.")}
 flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "MOJA")
 
 if (params$isAccessible == "yes") {
@@ -1121,7 +1121,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcat3yrheatmap.5, out.height = 800, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in PARA.")}
+``` {r flowcat3yrheatmap.5, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in PARA.")}
 flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "PARA")
 
 if (params$isAccessible == "yes") {
