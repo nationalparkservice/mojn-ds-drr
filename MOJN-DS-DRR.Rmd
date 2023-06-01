@@ -425,7 +425,7 @@ The data in the data package described above have been reviewed by staff in the 
 - Due to COVID-19 pandemic travel restrictions from December 2020 to February 2021, monitoring of 3-year springs was not completed in DEVA during WY2021. Some annual springs were monitored later than usual during the field season, when field work was allowed to resume.
 - Beginning in WY2021, measurement of springbrook length was separated into continuous and discontinuous measurements. Previously, only continuous springbrook length was measured.
 
-## General {.tabset}
+## General {.tabset .tabset-pills}
 
 ### Completeness 
 
@@ -1299,12 +1299,12 @@ if (params$isAccessible == "yes") {
 These box plots show the median and quartile values for dissolved oxygen concentration (mg/L) for each park and 3-year cycle during the reporting period. Both annual and 3-year springs are included in the 3-year cycles. Data flagged as “Warning” or “Critical” are not included.
 
 ``` {r doplot, message = FALSE, fig.cap = capFig("Box plots of dissolved oxygen concentration quartiles for each park and 3-year cycle.")}
-tempplot <- WqPlotDOmgL(field.season = year.range)
+doplot <- WqPlotDOmgL(field.season = year.range)
 
 if (params$isAccessible == "yes") {
-    tempplot
+    doplot
 } else {
-    ggplotly(tempplot) %>%
+    ggplotly(doplot) %>%
     layout_ggplotly(x = -0.04, y = -0.01)
 }
 ```
