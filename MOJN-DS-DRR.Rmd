@@ -6,19 +6,21 @@ params:
   packageAbstract: >-
     This report summarizes data quality evaluations of discrete data collected for the Mojave Desert Network Inventory and Monitoring Program (MOJN I&M) Desert Springs protocol from 2016 to 2022. This protocol is designed to monitor hydrological and ecological condition at 250 springs in Death Valley National Park (DEVA), Joshua Tree National Park (JOTR), Lake Mead National Recreation Area (LAKE), Mojave National Preserve (MOJA), and Grand Canyon-Parashant National Monument (PARA). Data collected include water quantity and water quality measurements as well as site condition information about dominant vegetation, invasive plants, disturbance, and wildlife evidence.
   dataPackage1RefID: 2294501
-  dataPackage1Title: "MOJN I&M Desert Springs Data Package 2016-2022"               # Should match title in data store.
-  dataPackage1Description: "MOJN I&M DS 2016-2022"  
+  dataPackage1Title: "MOJN I&M Desert Springs Data Package QA/QC Report 2016-2023"               # Should match title in data store.
+  dataPackage1Description: "MOJN I&M DS QA/QC 2016-2023"  
   dataPackage2RefID: 0                              # Data Store reference ID for data set associated with this report. You must have at least one.
   dataPackage2Title: "Dataset 2 FULL TITLE"               # Should match title in data store.
   dataPackage2Description: "SHORT TITLE FOR DATASET 1"  
   dataSource: "database"  # Either "local" or "database". If "local", csv data must be in data/raw folder. If database, must be able to connect to the MOJN DS SQL Server db.
   isAccessible: "yes" # Either "yes" for a version that is screen-readable or "no" for a version with interactive table and plot formatting.
   wateryearStart: "2016"  # Enter the start and end year for data that you want this report to include by default (can be the same year)
-  wateryearEnd: "2022"
-  
+  wateryearEnd: "2023"
+
+pagetitle: "MOJN DS DRR 2016-2023"
+lang: "en"
 title: |
     | Mojave Desert Network Desert Springs
-    | Data Package 2016-2022          
+    | Data Package QA/QC Report 2016-2023          
 subtitle: |
   | Data Release Report `r params$reportNumber` 
 author:
@@ -36,10 +38,11 @@ csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa
 link-citations: yes
 output:
   html_document:
+    template: template_new.html
     df_print: kable
     fig_caption: true
     dev: svg
-    highlight: haddock
+    highlight: null
     smart: no
     theme: journal
     css: !expr here::here('common', 'journalnps.min.css')
@@ -275,7 +278,7 @@ cap <- c("Black Bird Mine Spring, Mojave National Preserve",
          "Cottonwood Palm Spring, Joshua Tree National Park")
 
 imgs_alt <- mapply(function(x, txt){
-  htmltools::tags$img(src = x, title = txt)
+  htmltools::tags$img(src = x, alt = txt)
 }, x = dat$filepath, txt = alt_text, SIMPLIFY = FALSE)
 
 cP1 <- htmlwidgets::JS("function(slick,index) {
@@ -285,18 +288,22 @@ cP1 <- htmlwidgets::JS("function(slick,index) {
 opts_dot_number <- slickR::settings(
     focusOnSelect = TRUE,
     dots = TRUE,
-    customPaging = cP1
+    customPaging = cP1,
+    accessibility = TRUE
     )
 
 slick_dots <- slickR::slickR(
   obj = imgs_alt,
   height = 400,
   width = "60%"
-  )
+  ) + slickR::settings(prevArrow = "<button class='slick-prev slick-arrow' aria-label='Previous image' type='button' style>",
+                       nextArrow = "<button class='slick-next slick-arrow' aria-label='Next image' type='button' style>")
 
-slick_cap_synch <- slickR(obj = cap, slideType = "p") + settings(arrows = FALSE)
+slick_cap_synch <- slickR::slickR(obj = cap,
+                                  slideType = "p"
+                                  ) + slickR::settings(arrows = FALSE)
 
-slick_dots %synch% slick_cap_synch + opts_dot_number 
+slick_dots %synch% slick_cap_synch # + opts_dot_number 
 
 ```
 
@@ -549,7 +556,7 @@ visitsbydate %>%
 
 These timelines show the date (month and day) that each spring was visited during each field season. They also show the median visit date across all field seasons at each spring. Springs should be visited at approximately the same time of year during each field season, ideally within a few weeks, in order to minimize seasonal effects on the data.
 
-``` {r visitdate.timeline.1, warning = FALSE, fig.height = 10, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in DEVA."), fig.alt = ""}
+``` {r visitdate.timeline.1, warning = FALSE, fig.height = 10, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in DEVA."), fig.alt = "Higher elevation springs in Death Valley are visited in November to December, before snow closes the roads and passes and it gets too cold in the mountains. Lower elevation springs in Death Valley are visited in January to February, before it gets too hot on the valley floor."}
 visitdate.plots <- qcVisitDateTimelines(park = "DEVA", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -566,7 +573,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r visitdate.timeline.2, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in JOTR."), fig.alt = ""}
+``` {r visitdate.timeline.2, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in JOTR."), fig.alt = "Springs in Joshua Tree are typically visited in December to February."}
 visitdate.plots <- qcVisitDateTimelines(park = "JOTR", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -583,7 +590,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r visitdate.timeline.3, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in LAKE."), fig.alt = ""}
+``` {r visitdate.timeline.3, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in LAKE."), fig.alt = "Annual springs in Lake Mead are typically visited in late October to early November. Three-year springs are typically visited in November and December."}
 visitdate.plots <- qcVisitDateTimelines(park = "LAKE", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -600,7 +607,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r visitdate.timeline.4, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in MOJA."), fig.alt = ""}
+``` {r visitdate.timeline.4, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in MOJA."), fig.alt = "Springs in Mojave are typically visited in Janaury to March."}
 visitdate.plots <- qcVisitDateTimelines(park = "MOJA", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -617,7 +624,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r visitdate.timeline.5, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in PARA."), fig.alt = ""}
+``` {r visitdate.timeline.5, warning = FALSE, out.width = "100%", fig.cap = capFig("Timeline of annual and 3-yr spring visits in PARA."), fig.alt = "Springs in Parashant are typically visited in March and April."}
 visitdate.plots <- qcVisitDateTimelines(park = "PARA", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -705,7 +712,7 @@ dpl.check %>%
 `r if(nrow(dpl.check) == 0){"All records have been accepted."}`
 `r if(nrow(dpl.check) > 0){"The above records need to be reviewed and accepted before publication."}`
 
-## Flow condition and water quantity {.tabset}
+## Flow condition and water quantity {.tabset .tabset-pills}
 
 Water quantity is the master variable in spring environments. The amount, timing, and duration of discharge control the character and extent of different aquatic habitats, the abundance of wetland plants that can be supported, and the ability of wildlife to access water for drinking.
 
@@ -963,7 +970,7 @@ flowcatdiscon %>%
 
 This stacked bar plot summarizes flow categories for annual springs, using the discontinuous portion of springbrooks where applicable. Flow categories include dry, wet soil only, and three classes of springbrook length (m) when surface water is present.
 
-``` {r flowcatannualplot, fig.cap = capFig("Stacked bar plot of flow categories at annual springs for each park.")}
+``` {r flowcatannualplot, fig.cap = capFig("Stacked bar plot of flow categories at annual springs for each park."), fig.alt = "Parashant and Death Valley have more annual springs with surface water present. Joshua Tree and Lake Mead have fewer annual springs with surface water present."}
 flowcatannualplot <- FlowCategoriesAnnualPlot(field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -984,7 +991,7 @@ if (params$isAccessible == "yes") {
 
 This stacked bar plot summarizes flow categories for 3-year springs, using the discontinuous portion of springbrooks where applicable. Flow categories include dry, wet soil only, and three classes of springbrook length (m) when surface water is present.
 
-``` {r flowcat3yrplot, fig.cap = capFig("Stacked bar plot of flow categories at 3-yr springs for each park.")}
+``` {r flowcat3yrplot, fig.cap = capFig("Stacked bar plot of flow categories at 3-yr springs for each park."), fig.alt = "Joshua Tree has the most three-year springs that are consistently dry, with more dry springs than springs with surface water present. The other parks have more springs with surface water present than dry springs."}
 flowcat3yrplot <- FlowCategoriesThreeYearPlot(field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1005,7 +1012,7 @@ if (params$isAccessible == "yes") {
 
 This heatmap shows flow categories at each annual spring over all field seasons, using the discontinuous portion of springbrooks where applicable. Flow categories include dry, wet soil only, and three classes of springbrook length (m) when surface water is present.
 
-``` {r flowcatannualheatmap.1, fig.cap = capFig("Heatmap of flow categories at annual springs in DEVA."), warning = FALSE}
+``` {r flowcatannualheatmap.1, fig.cap = capFig("Heatmap of flow categories at annual springs in DEVA."), fig.alt = "Most annual springs in Death Valley are consistently wet or dry.", warning = FALSE}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "DEVA", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1016,7 +1023,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcatannualheatmap.2, fig.height = 3, fig.cap = capFig("Heatmap of flow categories at annual springs in JOTR."), warning = FALSE}
+``` {r flowcatannualheatmap.2, fig.height = 3, fig.cap = capFig("Heatmap of flow categories at annual springs in JOTR."), fig.alt = "Most annual springs in Joshua Tree are consistently wet or dry. An exception is Queen Mountain Spring, which in some years has been dry and in other years has had flowing water greater than 50 meters long.", warning = FALSE}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "JOTR", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1027,7 +1034,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcatannualheatmap.3, fig.height = 3, fig.cap = capFig("Heatmap of flow categories at annual springs in LAKE.")}
+``` {r flowcatannualheatmap.3, fig.height = 3, fig.cap = capFig("Heatmap of flow categories at annual springs in LAKE."), fig.alt = "Annual springs in Lake Mead appear wetter in 2016 possibly due to the later timing of the visits during that field season."}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "LAKE", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1038,7 +1045,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcatannualheatmap.4, fig.height = 3, fig.cap = capFig("Heatmap of flow categories at annual springs in MOJA.")}
+``` {r flowcatannualheatmap.4, fig.height = 3, fig.cap = capFig("Heatmap of flow categories at annual springs in MOJA."), fig.alt = "Annual springs in Mojave show the most variability in being wet or dry from year to year."}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "MOJA", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1049,7 +1056,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcatannualheatmap.5, fig.height = 3, fig.cap = capFig("Heatmap of flow categories at annual springs in PARA.")}
+``` {r flowcatannualheatmap.5, fig.height = 3, fig.cap = capFig("Heatmap of flow categories at annual springs in PARA."), fig.alt = "Most annual springs in Parashant tend to be consistently wet or dry. Exceptions include Mustang Spring and Yellowstone Spring, which in some years have been dry and in other years have had flowing water greater than 50 meters long."}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "PARA", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1064,7 +1071,7 @@ if (params$isAccessible == "yes") {
 
 This heatmap shows flow categories at each 3-year spring over all field seasons, using the discontinuous portion of springbrooks where applicable. Flow categories include dry, wet soil only, and three classes of springbrook length (m) when surface water is present.
 
-``` {r flowcat3yrheatmap.1, warning = FALSE, fig.height = 10, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in DEVA.")}
+``` {r flowcat3yrheatmap.1, warning = FALSE, fig.height = 10, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in DEVA."), fig.alt = "There is only one complete three-year cycle at Death Valley due to the pandemic. The 2021 field season was ended early."}
 flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "DEVA", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1075,7 +1082,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcat3yrheatmap.2, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in JOTR.")}
+``` {r flowcat3yrheatmap.2, warning = FALSE, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in JOTR."), fig.alt = "Most three-year springs in Joshua Tree are dry or do not have consistent surface water from year to year."}
 flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "JOTR", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1086,7 +1093,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcat3yrheatmap.3, warning = FALSE, fig.height = 6, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in LAKE.")}
+``` {r flowcat3yrheatmap.3, warning = FALSE, fig.height = 6, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in LAKE."), fig.alt = "Some three-year springs in Lake Mead appear wetter in 2016 possibly due to the later timing of the visits during that field season."}
 flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "LAKE", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1097,7 +1104,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcat3yrheatmap.4, warning = FALSE, fig.height = 6, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in MOJA.")}
+``` {r flowcat3yrheatmap.4, warning = FALSE, fig.height = 6, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in MOJA."), fig.alt = "There are some three-year springs in Mojave that are consistently dry, but most have had surface water present during at least one visit."}
 flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "MOJA", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1108,7 +1115,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
-``` {r flowcat3yrheatmap.5, warning = FALSE, fig.height = 6, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in PARA.")}
+``` {r flowcat3yrheatmap.5, warning = FALSE, fig.height = 6, fig.cap = capFig("Heatmap of flow categories at 3-yr springs in PARA."), fig.alt = "There are only two complete three-years cycle at Parashant due to the pandemic. The 2020 field season was ended early."}
 flowcat3yrheatmap <- FlowCategoriesThreeYearHeatMap(park = "PARA", field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1123,7 +1130,7 @@ if (params$isAccessible == "yes") {
 
 This map shows flow categories at annual and 3-year springs, using the discontinuous portion of springbrooks where applicable. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r flowcatmap, echo = FALSE, message = FALSE, warning = FALSE}
+``` {r flowcatmap, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "Map of flow categories for each desert springs visit. Data for each visit can be found in the table in section 4.3.1. Spring discharge summary. Summarized data for each park can be found in the table in section 4.3.10 Discontinuous flow category summary."}
 # if (params$isAccessible == "yes") {
 #   flowcatmap_access <- FlowCategoriesMap(interactive = "no")
 #   flowcatmap_access
@@ -1135,7 +1142,7 @@ This map shows flow categories at annual and 3-year springs, using the discontin
 
 `r capFig("Map of flow categories at springs in each park.")`
 
-## Water quality {.tabset}
+## Water quality {.tabset .tabset-pills}
 
 Water quality includes four parameters: water temperature, specific conductance, pH, and dissolved oxygen. Water temperature influences many chemical and physical properties of water as well as the metabolic activity of aquatic organisms. Specific conductance is related to salinity and measures the concentration of dissolved ions in the water, which can help detect contamination or disturbance. pH affects the solubility and toxicity of chemicals and heavy metals in the water. Dissolved oxygen sustains aquatic organisms that breathe aerobically, including crustaceans, mollusks, insects, amphibians, and fish.
 
@@ -1253,7 +1260,7 @@ wqstats %>%
 
 These box plots show the median and quartile values for water temperature (C) for each park and 3-year cycle during the reporting period. Both annual and 3-year springs are included in the 3-year cycles. Data flagged as “Warning” or “Critical” are not included.
 
-``` {r tempplot, message = FALSE, fig.cap = capFig("Box plots of water temperature quartiles for each park and 3-year cycle.")}
+``` {r tempplot, message = FALSE, fig.cap = capFig("Box plots of water temperature quartiles for each park and 3-year cycle."), fig.alt = "Lake Mead has the highest median and absolute water temperature values. Refer to the water quality summary statistics table in section 4.4.5. for median and quartile values."}
 tempplot <- WqPlotTemp(field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1268,7 +1275,7 @@ if (params$isAccessible == "yes") {
 
 These box plots show the median and quartile values for specific conductance (uS/cm) for each park and 3-year cycle during the reporting period. Both annual and 3-year springs are included in the 3-year cycles. Data flagged as “Warning” or “Critical” are not included.
 
-``` {r spcondplot, message = FALSE, warning = FALSE, fig.cap = capFig("Box plots of specific conductance quartiles for each park and 3-year cycle.")}
+``` {r spcondplot, message = FALSE, warning = FALSE, fig.cap = capFig("Box plots of specific conductance quartiles for each park and 3-year cycle."), fig.alt = "Lake Mead has the highest median specific conductance values, while Death Valley has the highest absolute values. Joshua Tree has the lowest median values. Refer to the water quality summary statistics table in section 4.4.5. for median and quartile values."}
 spcondplot <- WqPlotSpCond(field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1283,7 +1290,7 @@ if (params$isAccessible == "yes") {
 
 These box plots show the median and quartile values for pH for each park and 3-year cycle during the reporting period. Both annual and 3-year springs are included in the 3-year cycles. Data flagged as “Warning” or “Critical” are not included.
 
-``` {r phplot, message = FALSE, fig.cap = capFig("Box plots of pH quartiles for each park and 3-year cycle.")}
+``` {r phplot, message = FALSE, fig.cap = capFig("Box plots of pH quartiles for each park and 3-year cycle."), fig.alt = "Most parks have median pH values between 7.5 and 8.0. Refer to the water quality summary statistics table in section 4.4.5. for median and quartile values."}
 phplot <- WqPlotPH(field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1298,7 +1305,7 @@ if (params$isAccessible == "yes") {
 
 These box plots show the median and quartile values for dissolved oxygen concentration (mg/L) for each park and 3-year cycle during the reporting period. Both annual and 3-year springs are included in the 3-year cycles. Data flagged as “Warning” or “Critical” are not included.
 
-``` {r doplot, message = FALSE, fig.cap = capFig("Box plots of dissolved oxygen concentration quartiles for each park and 3-year cycle.")}
+``` {r doplot, message = FALSE, fig.cap = capFig("Box plots of dissolved oxygen concentration quartiles for each park and 3-year cycle."), fig.alt = "Springs in all parks have a wide range of dissolved oxygen concentration values. Refer to the water quality summary statistics table in section 4.4.5. for median and quartile values."}
 doplot <- WqPlotDOmgL(field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1313,7 +1320,7 @@ if (params$isAccessible == "yes") {
 
 This map shows water temperature (C) at annual and 3-year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r tempmap, message = FALSE}
+``` {r tempmap, message = FALSE, fig.alt = "Map of water temperature values for each desert springs visit where sufficient surface water was present. Summarized data for each park can be found in the table in section 4.4.5. Water quality summary statistics."}
 tempmap <- WqMapTemp(field.season = year.range)
 
 tempmap
@@ -1325,7 +1332,7 @@ tempmap
 
 This map shows specific conductance (uS/cm) at annual and 3-year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r spcondmap, message = FALSE}
+``` {r spcondmap, message = FALSE, fig.alt = "Map of specific conductance values for each desert springs visit where sufficient surface water was present. Summarized data for each park can be found in the table in section 4.4.5. Water quality summary statistics."}
 spcondmap <- WqMapSpCond(field.season = year.range)
 
 spcondmap
@@ -1337,7 +1344,7 @@ spcondmap
 
 This map shows pH at annual and 3-year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r phpmap, message = FALSE}
+``` {r phpmap, message = FALSE, fig.alt = "Map of pH values for each desert springs visit where sufficient surface water was present. Summarized data for each park can be found in the table in section 4.4.5. Water quality summary statistics."}
 phmap <- WqMapPH(field.season = year.range)
 
 phmap
@@ -1349,7 +1356,7 @@ phmap
 
 This map shows dissolved oxygen concentration (mg/L) at annual and 3-year springs where water was present. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r domap, message = FALSE}
+``` {r domap, message = FALSE, fig.alt = "Map of dissolved oxygen concentration values for each desert springs visit where sufficient surface water was present. Summarized data for each park can be found in the table in section 4.4.5. Water quality summary statistics."}
 domap <- WqMapDO(field.season = year.range)
 
 domap
@@ -1357,7 +1364,7 @@ domap
 
 `r capFig("Map of dissolved oxygen concentration readings at springs in each park.")`
 
-## Riparian vegetation {.tabset}
+## Riparian vegetation {.tabset .tabset-pills}
 
 ### Vegetation present, no lifeforms
 
@@ -1459,7 +1466,7 @@ lifeformobservations %>%
               header = function(value) snakecase::to_title_case(value)))
 ```
 
-## Invasive plants {.tabset}
+## Invasive plants {.tabset .tabset-pills}
 
 ### Targeted invasive plants presence
 
@@ -1493,7 +1500,7 @@ reactable::reactable(dplyr::select(invplants, -Notes),
 
 This map shows observations of targeted invasive plant species. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r invplantmap, echo = FALSE, message = FALSE, warning = FALSE}
+``` {r invplantmap, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "Map of invasive plant observations at desert springs. Data can be found in the table in section 4.6.1. Targeted invasive plants presence."}
 invplantmap <- InvasivePlantsMap(field.season = year.range)
 
 invplantmap
@@ -1501,7 +1508,7 @@ invplantmap
 
 `r capFig("Map of targeted invasive plants observed at springs in each park.")`
 
-## Flow modification and disturbance {.tabset}
+## Flow modification and disturbance {.tabset .tabset-pills}
 
 ### Overall disturbance < any other disturbance category
 
@@ -1607,7 +1614,7 @@ flowmodcount %>%
 
 This bar plot shows the percentage of springs in each park where active, inactive (historical), or no flow modification have been observed. In situations where there are discrepancies in flow modification observations at a spring across different field seasons, the highest level of modification has been counted.
 
-``` {r flowmodplot, fig.cap = capFig("Stacked bar plot of flow modification status at springs in each park.")}
+``` {r flowmodplot, fig.cap = capFig("Stacked bar plot of flow modification status at springs in each park."), fig.alt = "Mojave has the most springs with active flow modification at 53%. Joshua Tree has the most springs with no active or historical flow modification at 83%. Summarized data for each park can be found in the table in section 4.7.5 Flow modification summary."}
 flowmodplot <- FlowModPlot(field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1669,7 +1676,7 @@ reactable::reactable(dplyr::select(humanuseobs, -Notes),
 
 This bar plot shows the percentage of springs in each park where human use disturbance was observed.
 
-``` {r humanuseplot, fig.cap = capFig("Bar plots of human use disturbance observed at springs in each park.")}
+``` {r humanuseplot, fig.cap = capFig("Bar plots of human use disturbance observed at springs in each park."), fig.alt = "Mojave has the most springs with evidence of human use at 73%. Death Valley has the fewest at 30%. Data for each visit can be found in the table in section 4.7.8 Human use presence."}
 humanuseplot <- HumanUsePlot(field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1683,7 +1690,7 @@ if (params$isAccessible == "yes") {
 
 This map shows where human use disturbance was observed. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r humanusemap, echo = FALSE, message = FALSE, warning = FALSE}
+``` {r humanusemap, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "Map of human use observations at desert springs. Data for each visit can be found in the table in section 4.7.8 Human use presence."}
 humanusemap <- HumanUseMap(field.season = year.range)
 
 humanusemap
@@ -1723,7 +1730,7 @@ reactable(dplyr::select(livestockobs, -Notes),
 
 This bar plot shows the percentage of springs in each park where livestock disturbance was observed.
 
-``` {r livestockplot, fig.cap = capFig("Bar plots of livestock disturbance observed at springs in each park.")}
+``` {r livestockplot, fig.cap = capFig("Bar plots of livestock disturbance observed at springs in each park."), fig.alt = "Mojave has the most springs with evidence of livestock at 53%. Joshua Tree has the fewest at 0%. Data for each visit can be found in the table in section 4.7.11 Livestock presence."}
 livestockplot <- LivestockPlot(field.season = year.range)
 
 if (params$isAccessible == "yes") {
@@ -1737,7 +1744,7 @@ if (params$isAccessible == "yes") {
 
 This map shows where livestock disturbance was observed. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r livestockmap, echo = FALSE, message = FALSE, warning = FALSE}
+``` {r livestockmap, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "Map of livestock evidence observations at desert springs. Data for each visit can be found in the table in section 4.7.11 Livestock presence."}
 livestockmap <- LivestockMap(field.season = year.range)
 
 livestockmap
@@ -1745,7 +1752,7 @@ livestockmap
 
 `r capFig("Map of livestock disturbance observed at springs in each park.")`
 
-## Wildlife evidence {.tabset}
+## Wildlife evidence {.tabset .tabset-pills}
 
 ### Wildlife observed, no types recorded
 
@@ -1835,7 +1842,7 @@ reactable(dplyr::select(ungulatesevidence, -Notes),
 
 This map shows where evidence of ungulate (sheep or deer) activity was observed. Evidence can include direction observation, tracks, or scat. If there is a field season slider at the top of the map, then data from a specific field season may be selected. If there is no field season slider, then data from the most recent field season are shown.
 
-``` {r ungulatesmap, echo = FALSE, message = FALSE, warning = FALSE}
+``` {r ungulatesmap, echo = FALSE, message = FALSE, warning = FALSE, fig.alt = "Map of ungulates evidence observations at desert springs. Data for each visit can be found in the table in section 4.8.3 Ungulates evidence."}
 ungulatesmap <- UngulatesMap(field.season = year.range)
 
 ungulatesmap
