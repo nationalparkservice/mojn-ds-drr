@@ -16,7 +16,7 @@ params:
   wateryearStart: "2016"  # Enter the start and end year for data that you want this report to include by default (can be the same year)
   wateryearEnd: "2023"
 
-pagetitle: "MOJN DS DRR 2016-2023"
+pagetitle: "MOJN DS 2016-2023"
 lang: "en"
 title: |
     | Mojave Desert Network Desert Springs
@@ -236,7 +236,7 @@ The following background information is summarized from the *Springs in the Moja
 
 Springs are water sources that form where groundwater reaches the land surface. They can range in size from seasonal seeps that go dry in the summer to perennial streams that flow all year long and support large wetland environments (Figure 1). Compared to the surrounding desert, spring and wetland environments in the Mojave and Great Basin regions support a greater abundance and diversity of plant and animal life. Large mammals, like desert bighorn sheep, depend on standing water to survive the heat of summer. Many birds depend on riparian habitat during their migratory seasons, and bats frequent open pools when foraging for insects. Some springs support rare or endemic species, including fish, amphibians, and aquatic invertebrates. Reliable water sources are scarce, so springs are often vital to the distribution and connectivity of wildlife habitat across the landscape.
 
-``` {r figure1, echo = FALSE, fig.align = "left", fig.cap = capFig("Examples of springs in the Mojave Desert."), height = 480, fig.alt = "Twelve photos of diverse springs across the network parks."}
+``` {r figure1, echo = FALSE, fig.align = "left", fig.cap = capFig("Examples of springs in the Mojave Desert."), fig.asp = 0.52, fig.alt = "Twelve photos of diverse springs across the network parks."}
 
 dat <- tibble::tibble(filepath = glue::as_glue(c(here::here("figures", "MOJA_P_BLA0014.JPG"),
                                                  here::here("figures", "JOTR_P_QUE0109.JPG"),
