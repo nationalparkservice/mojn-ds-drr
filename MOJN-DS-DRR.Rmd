@@ -646,10 +646,11 @@ if (params$isAccessible == "yes") {
 This table provides a list of springs that were visited multiple times during a field season. There should only be one primary visit per field season. Supplemental visits involve collecting specific data to supplement the data collected during the primary visit. Supplemental visits typically occur when a sensor is inadvertently forgotten during the primary visit and the spring is revisited later in the field season for sensor deployment. Replicate visits involve collecting a full set of data in addition to the data collected during the primary visit. Replicate visits may occur during training or when calibrating or comparing field crews.
 
 ``` {r repeats, fig.cap = capTab("Springs visited more than one time per field season.")}
-repeats <- qcRepeatVisits(field.season = year.range)
+repeats <- qcRepeatVisits(field.season = year.range) %>%
+  dplyr::select(-MonitoringStatus)
 
 reactable::reactable(dplyr::select(repeats, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 50,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                               header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
@@ -754,13 +755,12 @@ This table lists visits where the spring was recorded as dry, but either dischar
 
 ``` {r drynonzero, fig.cap = capTab("Dry springs with recorded discharge or springbrook length.")}
 drynonzero <- qcSpringDryWater(field.season = year.range) %>%
-  dplyr::select(-Panel) %>%
   tidyr::unite("Notes", c("DischargeNotes", "SpringbrookNotes"), remove = TRUE, na.rm = TRUE, sep = " ") %>%
   dplyr::mutate(Notes = case_when(Notes == "" ~ NA_character_,
                                   TRUE ~ Notes))
 
 reactable::reactable(dplyr::select(drynonzero, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 50,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                    header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
@@ -786,13 +786,12 @@ This table lists visits where the spring was not recorded as dry and discharge w
 
 ``` {r notdrynowater, fig.cap = capTab("Non-dry springs without recorded discharge or springbrook length.")}
 notdrynowater <- qcSpringNotDryNoWater(field.season = year.range) %>%
-  dplyr::select(-Panel) %>%
   tidyr::unite("Notes", c("DischargeNotes", "SpringbrookNotes"), remove = TRUE, na.rm = TRUE, sep = " ") %>%
   dplyr::mutate(Notes = case_when(Notes == "" ~ NA_character_,
                                   TRUE ~ Notes))
 
 reactable::reactable(dplyr::select(notdrynowater, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 150,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                               header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
@@ -818,13 +817,12 @@ This table lists visits where estimated discharge (discharge class) or volumetri
 
 ``` {r dischargemissing, fig.cap = capTab("Spring visits with missing discharge data.")}
 dischargemissing <- qcDischargeMissing(field.season = year.range) %>%
-  dplyr::select(-Panel) %>%
   tidyr::unite("Notes", c("DischargeNotes", "SpringbrookNotes"), remove = TRUE, na.rm = TRUE, sep = " ") %>%
   dplyr::mutate(Notes = case_when(Notes == "" ~ NA_character_,
                                   TRUE ~ Notes))
 
 reactable::reactable(dplyr::select(dischargemissing, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 50,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                               header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
@@ -1151,7 +1149,8 @@ Water quality includes four parameters: water temperature, specific conductance,
 These are water quality values that fall above or below the ranges that we typically see in spring systems. These data are not necessarily incorrect, but they are outliers that should be evaluated using data quality flags and field notes. Wildly impossible values may be the result of instrument malfunction, improper calibration, or typos during data entry. The following records are included in the list below: temperature values greater than 30 C, pH values greater than 10 and less than 6, specific conductance values greater than 20000 uS/cm, dissolved oxygen percent values greater than 110% or less than 2%, and dissolved oxygen concentration values greater than 12 mg/L.
 
 ``` {r wqsanity, fig.cap = capTab("Water quality values that fall outside of expected ranges.")}
-wqsanity <- qcWqSanity(field.season = year.range)
+wqsanity <- qcWqSanity(field.season = year.range) %>%
+  dplyr::select(-VisitType, -SampleFrame, -Panel)
 
 wqsanity %>%
   reactable::reactable(
@@ -1171,10 +1170,11 @@ wqsanity %>%
 These are water quality values that have data quality flags. I = Information: These data do not have any suspected problems, but there may be information regarding the equipment or conditions in which they were collected that could inform their interpretation. W = Warning: These data are suspected to have problems and should only be used after careful assessment of instrument and environmental factors. C = Critical: These data are suspected to have serious problems and are likely unusable.
 
 ``` {r wqflags, fig.cap = capTab("Water quality values that have data quality flags.")}
-wqflags <- qcWqFlags(field.season = year.range)
+wqflags <- qcWqFlags(field.season = year.range) %>%
+  dplyr::select(-VisitType, -SampleFrame, -Panel)
 
 reactable::reactable(dplyr::select(wqflags, -FlagNote),
-            defaultColDef = reactable::colDef(minWidth = 50,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                               header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
@@ -1191,7 +1191,7 @@ reactable::reactable(dplyr::select(wqflags, -FlagNote),
             striped = TRUE,
             bordered = TRUE,
             highlight = TRUE,
-            resizable = TRUE,)
+            resizable = TRUE)
 ```
 
 ### Local dissolved oxygen calibration
@@ -1476,7 +1476,7 @@ This table lists visits where targeted invasive plants were observed. Targeted i
 invplants <- InvasivePlants(field.season = year.range)
 
 reactable::reactable(dplyr::select(invplants, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 50,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                               header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
@@ -1652,7 +1652,7 @@ This table lists visits where human use disturbance was recorded at a spring.
 humanuseobs <- HumanUseObservations(field.season = year.range)
 
 reactable::reactable(dplyr::select(humanuseobs, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 50,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                        header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
@@ -1706,7 +1706,7 @@ This table lists visits where livestock disturbance was recorded at a spring.
 livestockobs <- LivestockObservations(field.season = year.range)
 
 reactable(dplyr::select(livestockobs, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 50,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                        header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
@@ -1762,7 +1762,7 @@ This table lists visits where wildlife was observed, but no wildlife type was sp
 wildlifenotype <- qcWildlifeObservedNoTypes(field.season = year.range)
 
 reactable(dplyr::select(wildlifenotype, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 50,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                        header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
@@ -1790,7 +1790,7 @@ This table lists visits where wildlife type was specified, but no evidence type 
 wildlifenoevidence <- qcWildlifeObservedNoEvidence(field.season = year.range)
 
 reactable(dplyr::select(wildlifenoevidence, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 50,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                        header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
@@ -1818,7 +1818,7 @@ This table lists visits were evidence of ungulate (sheep or deer) activity was o
 ungulatesevidence <- UngulatesEvidence(field.season = year.range)
 
 reactable(dplyr::select(ungulatesevidence, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 50,
+            defaultColDef = reactable::colDef(minWidth = 100,
                                        header = function(value) snakecase::to_title_case(value)),
             details = reactable::colDef(
               name = "Notes",
