@@ -1,3 +1,0 @@
-id	unitType	parentSI	multiplierToSI	description
-microsiemensPerCentimeter	specific conductance			?S/cm
-millimetersOfMercury	barometric pressure			mmHg
