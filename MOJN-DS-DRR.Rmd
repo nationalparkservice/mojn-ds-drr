@@ -6,8 +6,8 @@ params:
   packageAbstract: >-
     This report summarizes data quality evaluations of discrete data collected for the Mojave Desert Network Inventory and Monitoring Program (MOJN I&M) Desert Springs protocol from 2016 to 2022. This protocol is designed to monitor hydrological and ecological condition at 250 springs in Death Valley National Park (DEVA), Joshua Tree National Park (JOTR), Lake Mead National Recreation Area (LAKE), Mojave National Preserve (MOJA), and Grand Canyon-Parashant National Monument (PARA). Data collected include water quantity and water quality measurements as well as site condition information about dominant vegetation, invasive plants, disturbance, and wildlife evidence.
   dataPackage1RefID: 2294501
-  dataPackage1Title: "MOJN I&M Desert Springs Data Package QA/QC Report 2016-2023"               # Should match title in data store.
-  dataPackage1Description: "MOJN I&M DS QA/QC 2016-2023"  
+  dataPackage1Title: "MOJN I&M Desert Springs Data QC Report 2016-2023"               # Should match title in data store.
+  dataPackage1Description: "MOJN I&M DS QC 2016-2023"  
   dataPackage2RefID: 0                              # Data Store reference ID for data set associated with this report. You must have at least one.
   dataPackage2Title: "Dataset 2 FULL TITLE"               # Should match title in data store.
   dataPackage2Description: "SHORT TITLE FOR DATASET 1"  
@@ -16,13 +16,13 @@ params:
   wateryearStart: "2016"  # Enter the start and end year for data that you want this report to include by default (can be the same year)
   wateryearEnd: "2023"
 
-pagetitle: "MOJN DS 2016-2023"
+pagetitle: "MOJN DS QC 2016-2023"
 lang: "en"
 title: |
-    | Mojave Desert Network Desert Springs
-    | Data Package QA/QC Report 2016-2023          
+    | Mojave Desert Network Desert Springs Protocol
+    | Data Quality Control Report `r params$reportNumber`
 subtitle: |
-  | Data Release Report `r params$reportNumber` 
+  | Data Package 2016-2023  
 author:
   - name: "Jennifer Bailard, Sarah Wright, and Mark Lehman"
     affiliation: |
@@ -38,6 +38,7 @@ csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa
 link-citations: yes
 output:
   html_document:
+    self_contained: true
     template: template_new.html
     df_print: kable
     fig_caption: true
@@ -141,9 +142,9 @@ knitr::opts_chunk$set(
   echo = FALSE,
   comment = " ",
   dev = "svg",
-  fig.path = here::here("figures"),
   tidy.opts = list(width.cutoff = 60),
-  tidy = TRUE
+  tidy = TRUE,
+  fig.keep = "none"
 )
 # if ggplot, update theme to default to centered titles
 if ("ggplot2" %in% .packages()) {
@@ -236,7 +237,7 @@ The following background information is summarized from the *Springs in the Moja
 
 Springs are water sources that form where groundwater reaches the land surface. They can range in size from seasonal seeps that go dry in the summer to perennial streams that flow all year long and support large wetland environments (Figure 1). Compared to the surrounding desert, spring and wetland environments in the Mojave and Great Basin regions support a greater abundance and diversity of plant and animal life. Large mammals, like desert bighorn sheep, depend on standing water to survive the heat of summer. Many birds depend on riparian habitat during their migratory seasons, and bats frequent open pools when foraging for insects. Some springs support rare or endemic species, including fish, amphibians, and aquatic invertebrates. Reliable water sources are scarce, so springs are often vital to the distribution and connectivity of wildlife habitat across the landscape.
 
-``` {r figure1, echo = FALSE, fig.align = "left", fig.cap = capFig("Examples of springs in the Mojave Desert."), fig.asp = 0.52, fig.alt = "Twelve photos of diverse springs across the network parks."}
+``` {r figureold, eval = FALSE, echo = FALSE, fig.align = "left", fig.cap = capFig("Examples of springs in the Mojave Desert."), fig.asp = 0.52, fig.alt = "Twelve photos of diverse springs across the network parks."}
 
 dat <- tibble::tibble(filepath = glue::as_glue(c(here::here("figures", "MOJA_P_BLA0014.JPG"),
                                                  here::here("figures", "JOTR_P_QUE0109.JPG"),
@@ -250,6 +251,78 @@ dat <- tibble::tibble(filepath = glue::as_glue(c(here::here("figures", "MOJA_P_B
                                                  here::here("figures", "DEVA_P_GNO0081.JPG"),
                                                  here::here("figures", "DEVA_P_COT0794.JPG"),
                                                  here::here("figures", "JOTR_P_COT0294.JPG"))))
+
+alt_text <- c("Small, muddy puddle emerges from hillside, with cattle activity in the spring. There are some posts and other old remains of an exclosure fence around the source.",
+              "Small pool is situated in sand and bedrock at the bottom of a bouldery canyon.",
+              "Hot spring flows over a waterfall in a narrow canyon and is dammed by sandbags at the bottom to form a bathing pool.",
+              "Shallow, broad pond is situated in a grassy depression with pine trees in the background.",
+              "Shallow springbrook emerges from a qanat, with active pipe diversion and cattle activity in the spring.",
+              "Small pool supporting goldenrods emerges from a very steep hillside with little other vegetation around.",
+              "High discharge spring flows over a waterfall into a large, deep pool in a narrow canyon. The canyon is full of lush riparian vegetation, including cattails, monkeyflowers, grapevines, willows, and ferns.",
+              "Small, shallow pool emerges in the middle of sparse desert shrubland and flows for a few meters down a gradual slope.",
+              "Water seeps out of contacts between bedrock layers, with active pipe diversion of the seepage.",
+              "Long, narrow springbrook winds through a crusty salt flat devoid of vegetation.",
+              "Shallow springbrook is covered by aquatic plants in the shade of large cottonwood trees and other woody vegetation.",
+              "Dry spring is situated in a sandy wash below cluster of fan palms in a bouldery canyon.")
+
+cap <- c("Black Bird Mine Spring, Mojave National Preserve",
+         "Queen Mountain Spring, Joshua Tree National Park",
+         "Salt Cedar Hot Spring, Lake Mead National Recreation Area",
+         "Death Valley Pond, Parashant National Monument",
+         "Silver Lead Qanat, Mojave National Preserve",
+         "Corkscrew Spring, Death Valley National Park",
+         "Grapevine Spring, Lake Mead National Recreation Area",
+         "Currie Wells, Death Valley National Park",
+         "Rattlesnake Spring, Parashant National Monument",
+         "Gnome Spring, Death Valley National Park",
+         "Cottonwood Spring, Death Valley National Park",
+         "Cottonwood Palm Spring, Joshua Tree National Park")
+
+imgs_alt <- mapply(function(x, txt){
+  htmltools::tags$img(src = knitr::include_graphics(x), alt = txt)
+}, x = dat$filepath, txt = alt_text, SIMPLIFY = FALSE)
+
+cP1 <- htmlwidgets::JS("function(slick,index) {
+                            return '<a>'+(index+1)+'</a>';
+                       }")
+
+opts_dot_number <- slickR::settings(
+    focusOnSelect = TRUE,
+    dots = TRUE,
+    customPaging = cP1,
+    accessibility = TRUE
+    )
+
+slick_dots <- slickR::slickR(
+  obj = imgs_alt,
+  height = 400,
+  width = "60%"
+  ) + slickR::settings(lazyLoad = "progressive",
+                       prevArrow = "<button class='slick-prev slick-arrow' aria-label='Previous image' type='button' style>",
+                       nextArrow = "<button class='slick-next slick-arrow' aria-label='Next image' type='button' style>")
+
+slick_cap_synch <- slickR::slickR(obj = cap,
+                                  slideType = "p"
+                                  ) + slickR::settings(arrows = FALSE)
+
+slick_dots %synch% slick_cap_synch # + opts_dot_number 
+
+```
+
+``` {r figure1, echo = FALSE, fig.align = "left", fig.cap = capFig("Examples of springs in the Mojave Desert."), fig.asp = 0.52, fig.alt = "Twelve photos of diverse springs across the network parks."}
+
+dat <- tibble::tibble(filepath = glue::as_glue(c("https://npgallery.nps.gov/GetAsset/8cf94375-0819-4a96-bffa-f7771664324b/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/c5aa83f8-0f60-4091-9a32-e6a6fe93eb65/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/d0546fa9-2956-4fe0-9d47-8e1cfeec19b4/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/96aff2be-7d10-4211-bed9-5318ecdc40e7/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/828dc8c0-6895-4934-b519-41145845ea3c/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/179aefeb-328c-475c-9f6c-7ad7d50c1c1d/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/0c71ddef-8bf5-4614-b12e-8c7e5bc02ad3/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/5af8c79f-53ce-4258-ae8e-c7f265ec9c96/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/135b6b3d-1af5-4d64-a75b-a10540f6775e/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/0dffb355-fde9-4337-8fa4-76eb052a141d/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/8b837275-0dc2-4a89-b738-89fe9b9580dc/proxymdres.jpg",
+                                                 "https://npgallery.nps.gov/GetAsset/0faa0a42-a63c-409a-8326-19aaee9d9738/proxymdres.jpg")))
 
 alt_text <- c("Small, muddy puddle emerges from hillside, with cattle activity in the spring. There are some posts and other old remains of an exclosure fence around the source.",
               "Small pool is situated in sand and bedrock at the bottom of a bouldery canyon.",
@@ -296,7 +369,8 @@ slick_dots <- slickR::slickR(
   obj = imgs_alt,
   height = 400,
   width = "60%"
-  ) + slickR::settings(prevArrow = "<button class='slick-prev slick-arrow' aria-label='Previous image' type='button' style>",
+  ) + slickR::settings(#lazyLoad = "progressive",
+                       prevArrow = "<button class='slick-prev slick-arrow' aria-label='Previous image' type='button' style>",
                        nextArrow = "<button class='slick-next slick-arrow' aria-label='Next image' type='button' style>")
 
 slick_cap_synch <- slickR::slickR(obj = cap,
@@ -393,13 +467,13 @@ The published product is one data package containing multiple CSV data files:
 
 * **`r params$dataPackage1Title`.** Comma-separated text files containing data from the MOJN I&M Desert Springs protocol. These data were compiled by the MOJN I&M and were last updated on `r format(Sys.Date(), '%B %d, %Y')`. Available at `r paste0("https://irma.nps.gov/DataStore/Reference/Profile/", params$dataPackage1RefID)`. 
 
-Twenty CSV data files contain raw values suitable for use with the MOJN I&M Desert Springs R package (Table 2).
+Eighteen CSV data files contain raw values suitable for use with the MOJN I&M Desert Springs R package (Table 2).
 
 A data dictionary for all of the tables and fields in the published CSV files is provided in XML format with this data package. 
 
-```{r table2, echo = FALSE, fig.cap = capTab("File names and descriptions of published CSVs accompanying this data release report.")}
-FileName <- c("CalibrationDO", "CalibrationpH", "CalibrationSpCond", "DischargeEstimated", "DischargeFlowCondition", "DischargeVolumetric", "Disturbance", "DisturbanceFlowModification", "Invasives", "Riparian", "SensorRetrievalAttempts", "SensorsCurrentlyDeployed", "Site", "Visit", "VisitActivity", "WaterQualityDO", "WaterQualitypH", "WaterQualitySpCond", "WaterQualityTemperature", "Wildlife")
-Description <- c("Dissolved oxgyen calibration records", "pH calibration records", "Specific conductance calibration records", "Visually estimated discharge categories", "Springbrook lengths, widths, and flow condition categories", "Volumetrically collected discharge measurements", "Natural and anthropogenic disturbance presence, cover classes, and descriptions", "Presence and type of surface flow modifications", "Invasive vegetation species observations", "Vegetation life form category presence, rank, and dominant species", "Sensor recovery and download results and problems", "Serial numbers of currently deployed sensors", "Locations of spring sites in this dataset", "Sample frames, visit types, and monitoring status of spring sites", "Summary of types of data collected during site visits", "Dissolved oxygen measurements in springs", "pH measurements in springs", "Specific conductance measurements in springs", "Water temperature measurements in springs", "Wildlife use evidence types and descriptions")
+```{r table2, echo = FALSE, fig.cap = capTab("File names and descriptions of published CSVs accompanying this data QC report.")}
+FileName <- c("CalibrationDO", "CalibrationpH", "CalibrationSpCond", "DischargeEstimated", "DischargeFlowCondition", "DischargeVolumetric", "Disturbance", "DisturbanceFlowModification", "Invasives", "Riparian", "Site", "Visit", "VisitActivity", "WaterQualityDO", "WaterQualitypH", "WaterQualitySpCond", "WaterQualityTemperature", "Wildlife")
+Description <- c("Dissolved oxgyen calibration records", "pH calibration records", "Specific conductance calibration records", "Visually estimated discharge categories", "Springbrook lengths, widths, and flow condition categories", "Volumetrically collected discharge measurements", "Natural and anthropogenic disturbance presence, cover classes, and descriptions", "Presence and type of surface flow modifications", "Invasive vegetation species observations", "Vegetation life form category presence, rank, and dominant species", "Locations of spring sites in this dataset", "Sample frames, visit types, and monitoring status of spring sites", "Summary of types of data collected during site visits", "Dissolved oxygen measurements in springs", "pH measurements in springs", "Specific conductance measurements in springs", "Water temperature measurements in springs", "Wildlife use evidence types and descriptions")
 tbl <- data.frame(FileName, Description)
 
 tbl %>%
@@ -1851,10 +1925,10 @@ ungulatesmap
 `r capFig("Map of ungulate activity observed at springs in each park.")`
 
 # Usage Notes
-A MOJN Desert Springs R Package that is designed to work with the datasets in their published format is available on GitHub. This package was used to implement the quality checks that are included in this report and to generate the three calculated datasets that are included in this data package.
+A MOJN Desert Springs R Package that is designed to work with the datasets in their published format is available on GitHub. This package was used to implement the QC checks that are included in this report and to generate the three calculated datasets that are included in this data package.
 
 # Acknowledgements
-The authors would like to acknowledge Geoff Moret, who developed the Desert Springs protocol. We would also like to thank Lise Grace for providing review and editing assistance on this data release report.
+The authors would like to acknowledge Geoff Moret, who developed the Desert Springs protocol. We would also like to thank Lise Grace for providing review and editing assistance on this data QC report.
 
 # References
 
