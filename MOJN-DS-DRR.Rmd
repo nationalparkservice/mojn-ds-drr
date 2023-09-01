@@ -571,6 +571,75 @@ notsampled %>%
                         header = function(value) snakecase::to_title_case(value)))
 ```
 
+### Not active panel visits
+
+This table lists visits to springs that are not currently in an active sample frame or monitoring panel (e.g., annual and three-year springs). Many oversample springs were visited in MOJA, JOTR, and PARA during the first two years of protocol implementation because the network had sufficient personnel and resources to complete a full inventory of accessible springs in those parks. Some oversample springs are visited opportunistically to monitor specific resource concerns, such as springs in recently burned areas.
+
+``` {r notactive, fig.cap = capTab("Visits to springs that are not currently in an active sample frame or monitoring panel.")}
+notactive <- qcPanelCheck(field.season = year.range)
+
+notactive %>%
+  reactable::reactable(sortable = TRUE,
+                       filterable = TRUE,
+                       compact = TRUE,
+                       striped = TRUE,
+                       bordered = TRUE,
+                       highlight = TRUE,
+                       resizable = TRUE,
+                       defaultColDef = reactable::colDef(
+                        header = function(value) snakecase::to_title_case(value)))
+```
+
+### Not primary visits
+
+This table lists springs with any other combination of visit types other than one primary visit for each field season. Typically, if a spring is visited during a field season, then the spring should have one primary visit associated with it. Mistakes may occur when more than one visit to the same spring in the same field season is considered primary, or if no visits to a spring in a given field season are considered primary. This list also returns all springs that have supplemental, replicate, or dummy visits to allow the user to more easily check for mistakes.
+
+Primary visits involve collecting official data for the protocol. Supplemental visits involve collecting specific data to supplement the data collected during the primary visit. Supplemental visits typically occur when a sensor is inadvertently forgotten during the primary visit and the spring is revisited later in the field season for sensor deployment. Replicate visits involve collecting a full set of data in addition to the data collected during the primary visit. Replicate visits may occur during training or when calibrating or comparing field crews. Dummy visits usually involve test entries that are created to identify and fix bugs in the Survey123 form or AGOL database. Dummy visits should not be included in the published dataset.
+
+``` {r notprimary, fig.cap = capTab("Springs that had any other combination of visit types other than one primary visit for each field season.")}
+notprimary <- qcVisitTypeCheck(field.season = year.range)
+
+notprimary %>%
+  reactable::reactable(sortable = TRUE,
+                       filterable = TRUE,
+                       compact = TRUE,
+                       striped = TRUE,
+                       bordered = TRUE,
+                       highlight = TRUE,
+                       resizable = TRUE,
+                       defaultColDef = reactable::colDef(
+                        header = function(value) snakecase::to_title_case(value)))
+```
+
+### Repeat visits
+
+This table provides a list of springs that were visited multiple times during a field season for review. Supplemental visits involve collecting specific data to supplement the data collected during the primary visit. Supplemental visits typically occur when a sensor is inadvertently forgotten during the primary visit and the spring is revisited later in the field season for sensor deployment. Replicate visits involve collecting a full set of data in addition to the data collected during the primary visit. Replicate visits may occur during training or when calibrating or comparing field crews.
+
+``` {r repeats, fig.cap = capTab("Springs visited more than one time per field season.")}
+repeats <- qcRepeatVisits(field.season = year.range) %>%
+  dplyr::select(-MonitoringStatus)
+
+reactable::reactable(dplyr::select(repeats, -Notes),
+            defaultColDef = reactable::colDef(minWidth = 100,
+                                              header = function(value) snakecase::to_title_case(value)),
+            details = reactable::colDef(
+              name = "Notes",
+              details = function(index) {
+                note <- repeats$Notes[index]
+                if (!is.na(note)) {
+                  return(note)
+                }
+              }
+            ),
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE)
+```
+
 ### Visit dates by spring
 
 This table provides the date (month and day) that each spring was visited during each field season. Springs should be visited at approximately the same time of year during each field season, ideally within a few weeks, in order to minimize seasonal effects on the data.
@@ -713,35 +782,6 @@ if (params$isAccessible == "yes") {
    }
   p
 }
-```
-
-### Repeat visits
-
-This table provides a list of springs that were visited multiple times during a field season. There should only be one primary visit per field season. Supplemental visits involve collecting specific data to supplement the data collected during the primary visit. Supplemental visits typically occur when a sensor is inadvertently forgotten during the primary visit and the spring is revisited later in the field season for sensor deployment. Replicate visits involve collecting a full set of data in addition to the data collected during the primary visit. Replicate visits may occur during training or when calibrating or comparing field crews.
-
-``` {r repeats, fig.cap = capTab("Springs visited more than one time per field season.")}
-repeats <- qcRepeatVisits(field.season = year.range) %>%
-  dplyr::select(-MonitoringStatus)
-
-reactable::reactable(dplyr::select(repeats, -Notes),
-            defaultColDef = reactable::colDef(minWidth = 100,
-                                              header = function(value) snakecase::to_title_case(value)),
-            details = reactable::colDef(
-              name = "Notes",
-              details = function(index) {
-                note <- repeats$Notes[index]
-                if (!is.na(note)) {
-                  return(note)
-                }
-              }
-            ),
-            sortable = TRUE,
-            filterable = TRUE,
-            compact = TRUE,
-            striped = TRUE,
-            bordered = TRUE,
-            highlight = TRUE,
-            resizable = TRUE)
 ```
 
 ### Spring type discrepancies
