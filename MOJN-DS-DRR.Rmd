@@ -237,7 +237,7 @@ The following background information is summarized from the *Springs in the Moja
 
 Springs are water sources that form where groundwater reaches the land surface. They can range in size from seasonal seeps that go dry in the summer to perennial streams that flow all year long and support large wetland environments (Figure 1). Compared to the surrounding desert, spring and wetland environments in the Mojave and Great Basin regions support a greater abundance and diversity of plant and animal life. Large mammals, like desert bighorn sheep, depend on standing water to survive the heat of summer. Many birds depend on riparian habitat during their migratory seasons, and bats frequent open pools when foraging for insects. Some springs support rare or endemic species, including fish, amphibians, and aquatic invertebrates. Reliable water sources are scarce, so springs are often vital to the distribution and connectivity of wildlife habitat across the landscape.
 
-``` {r figureold, eval = FALSE, echo = FALSE, fig.align = "left", fig.cap = capFig("Examples of springs in the Mojave Desert."), fig.asp = 0.52, fig.alt = "Twelve photos of diverse springs across the network parks."}
+``` {r figureold, eval = FALSE, echo = FALSE, fig.align = "left", fig.asp = 0.52}
 
 dat <- tibble::tibble(filepath = glue::as_glue(c(here::here("figures", "MOJA_P_BLA0014.JPG"),
                                                  here::here("figures", "JOTR_P_QUE0109.JPG"),
@@ -1312,7 +1312,7 @@ reactable::reactable(dplyr::select(wqflags, -FlagNote),
 
 This table lists visits where dissolved oxygen percent was not calibrated to local dissolved oxygen. When calibrating to local dissolved oxygen, the calibration value is 100% regardless of the barometric pressure at the time of calibration. The 100% calibration value for this convention reflects the fact that the calibration environment is at 100% oxygen pressure for that specific location.
 
-``` {r docalcheck, fig.cap = capTab("Calibration events where dissolved oxygen was not calibrated to local dissolved oxygen.")}
+``` {r dolocalcheck, fig.cap = capTab("Calibration events where dissolved oxygen was not calibrated to local dissolved oxygen.")}
 localdo <- qcLocalDOCheck(field.season = year.range)
 
 localdo %>%
@@ -1336,6 +1336,66 @@ This table lists visits where the specific conductance standard used during cali
 scstandard <- qcSpCondStandardCheck(field.season = year.range)
 
 scstandard %>%
+  reactable::reactable(
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
+```
+
+### pH calibration check
+
+This table lists pH calibrations where any of the recorded values are suspect or outside of expected ranges. This includes post-calibration readings below 3.98 or above 4.10 for temperature-corrected pH 4 buffer, below 6.95 or above 7.15 for temperature-corrected pH 7 buffer, and below 9.80 or above 10.35 for temperature-corrected pH 10 buffer. This also includes buffer temperature readings below 0 C or above 40 C.
+
+``` {r phcalcheck, fig.cap = capTab("pH calibration events with suspect values.")}
+phcalcheck <- qcPHCalCheck(field.season = year.range)
+
+phcalcheck %>%
+  reactable::reactable(
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
+```
+
+### Specific conductance calibration check
+
+This table lists specific conductance calibrations where any of the recorded values are suspect or outside of expected ranges. This includes post-calibration readings that do not equal the commonly used standards of 1000 uS/cm, 1413 uS/cm, 5000 uS/cm, 10,000 uS/cm, or 50,000 uS/cm.
+
+``` {r spcalcheck, fig.cap = capTab("Specific conductance calibration events with suspect values.")}
+sccalcheck <- qcSpCondCalCheck(field.season = year.range)
+
+sccalcheck %>%
+  reactable::reactable(
+            sortable = TRUE,
+            filterable = TRUE,
+            compact = TRUE,
+            striped = TRUE,
+            bordered = TRUE,
+            highlight = TRUE,
+            resizable = TRUE,
+            defaultColDef = reactable::colDef(
+              header = function(value) snakecase::to_title_case(value)))
+```
+
+### Dissolved oxygen calibration check
+
+This table lists dissolved oxygen calibrations where any of the recorded values are suspect or outside of expected ranges. This includes post-calibration readings below 70% or above 105%. This also includes temperature readings below 0 C or above 40 C and barometric pressure readings below 550 mmHg or above 770 mmHg.
+
+``` {r docalcheck, fig.cap = capTab("Dissolved oxygen calibration events with suspect values.")}
+docalcheck <- qcDOCalCheck(field.season = year.range)
+
+docalcheck %>%
   reactable::reactable(
             sortable = TRUE,
             filterable = TRUE,
