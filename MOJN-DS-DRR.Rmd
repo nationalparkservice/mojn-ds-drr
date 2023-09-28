@@ -459,7 +459,7 @@ Data were evaluated using a collection of QC checks that are part of the MOJN I&
 
 ## Code Availability
 
-All of the code used in the preparation of this data package and QC report is available in the MOJN I&M Desert Springs R Package repository [INSERT LINK TO VERSIONED REPO] and the MOJN I&M Desert Springs QC Report repository [INSERT LINK TO VERSIONED REPO] on Github.
+All of the code used in the preparation of this data package and QC report is available at the [MOJN I&M Desert Springs R Package repository v0.1.0](https://github.com/nationalparkservice/mojn-ds-rpackage/releases/tag/v0.1.0) on Github.
 
 # Data Records
 The published product is one data package containing multiple CSV data files:
