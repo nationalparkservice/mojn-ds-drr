@@ -2,12 +2,12 @@
 params:
 
   reportNumber: ""                           # Optional. Only include this if publishing in the semi-official Data Release Report Series. Contact Joe if you are.
-  reportRefID: 2294501
+  reportRefID: 2300894
   packageAbstract: >-
     This report summarizes data quality evaluations of discrete data collected for the Mojave Desert Network Inventory and Monitoring Program (MOJN I&M) Desert Springs protocol from 2016 to 2022. This protocol is designed to monitor hydrological and ecological condition at 250 springs in Death Valley National Park (DEVA), Joshua Tree National Park (JOTR), Lake Mead National Recreation Area (LAKE), Mojave National Preserve (MOJA), and Grand Canyon-Parashant National Monument (PARA). Data collected include water quantity and water quality measurements as well as site condition information about dominant vegetation, invasive plants, disturbance, and wildlife evidence.
-  dataPackage1RefID: 2294501
-  dataPackage1Title: "MOJN I&M Desert Springs Data QC Report 2016-2023"               # Should match title in data store.
-  dataPackage1Description: "MOJN I&M DS QC 2016-2023"  
+  dataPackage1RefID: 2300498
+  dataPackage1Title: "MOJN I&M Desert Springs Data Package 2016-2023"               # Should match title in data store.
+  dataPackage1Description: "MOJN I&M DS 2016-2023"  
   dataPackage2RefID: 0                              # Data Store reference ID for data set associated with this report. You must have at least one.
   dataPackage2Title: "Dataset 2 FULL TITLE"               # Should match title in data store.
   dataPackage2Description: "SHORT TITLE FOR DATASET 1"  
@@ -143,8 +143,7 @@ knitr::opts_chunk$set(
   comment = " ",
   dev = "svg",
   tidy.opts = list(width.cutoff = 60),
-  tidy = TRUE,
-  fig.keep = "none"
+  tidy = TRUE
 )
 # if ggplot, update theme to default to centered titles
 if ("ggplot2" %in% .packages()) {
@@ -231,7 +230,7 @@ if (file.exists(file=here::here("data", "temp", "projectMetadata.RData"))) {
 <hr>
 # Background & Introduction
 
-The following background information is summarized from the *Springs in the Mojave Desert Network—Surface water monitoring at desert springs: Protocol narrative version 1.0* (NPS/MOJN/NRR—2018/1718), available here: https://irma.nps.gov/DataStore/Reference/Profile/2254900. Refer to the protocol narrative for more detailed information.
+The following background information is summarized from the [*Springs in the Mojave Desert Network—Surface water monitoring at desert springs: Protocol narrative version 1.0*](https://irma.nps.gov/DataStore/Reference/Profile/2254900). Refer to the protocol narrative for more detailed information.
 
 ## Significance
 
@@ -425,7 +424,7 @@ Because MOJN I&M field crews are often the only NPS field crews visiting many of
 
 ## Data Collection
 
-Field methods used are described in *Springs in the Mojave Desert Network—Surface water monitoring at desert springs: Standard operating procedures version 1.0*, available here: https://irma.nps.gov/DataStore/Reference/Profile/2256063. Specific methods include SOP 4: Spring Acceptance and Classification, SOP 5: Water Availability: Flow Condition, SOP 6: Water Availability: Data-Logging Sensors, SOP 7: Water Quality, SOP 8: Site Condition: Spring Vegetation, SOP 9: Site Condition: Invasive Plants, SOP 10: Site Condition: Disturbance, and SOP 11: Site Condition: Repeat Photographs. Table 1 summarizes all measurements that are collected for the protocol.
+Field methods are described in [*Springs in the Mojave Desert Network—Surface water monitoring at desert springs: Standard operating procedures version 1.0*](https://irma.nps.gov/DataStore/Reference/Profile/2256063). Specific methods include SOP 4: Spring Acceptance and Classification, SOP 5: Water Availability: Flow Condition, SOP 6: Water Availability: Data-Logging Sensors, SOP 7: Water Quality, SOP 8: Site Condition: Spring Vegetation, SOP 9: Site Condition: Invasive Plants, SOP 10: Site Condition: Disturbance, and SOP 11: Site Condition: Repeat Photographs. Table 1 summarizes all measurements that are collected for the protocol.
 
 ``` {r table1, fig.cap = capTab("Monitoring data collected for the Desert Springs protocol.")}
 
@@ -456,16 +455,16 @@ tbl %>%
 
 ## Data Processing
 
-Data were evaluated using a collection of QC checks that are part of the MOJN I&M Desert Springs R package. These evaluations are summarized in Section 4 of this document. Where unresolvable data quality issues exist, the data have been assigned a flag to indicate the level of concern and further described by a flag note. These flags include Information (not expected to impact the validity of the data), Warning (care should be taken when including the data in analyses), and Critical (serious concerns about the quality of the data, and they should not be used in analyses).
+Data were evaluated using a collection of QC checks that are part of the MOJN I&M Desert Springs R package. These evaluations are summarized in Section 4 of this document. Where unresolvable data quality issues exist, the data have been assigned a flag to indicate the level of concern and further described by a flag note. These flags include Information (not expected to impact the validity of the data), Warning (care should be taken when including the data in analyses), and Critical (serious concerns about the quality of the data which should not be used in analyses).
 
 ## Code Availability
 
-All of the code used in the preparation of this data package is available in the MOJN I&M Desert Springs R Package [INSERT LINK].
+All of the code used in the preparation of this data package and QC report is available in the MOJN I&M Desert Springs R Package repository [INSERT LINK TO VERSIONED REPO] and the MOJN I&M Desert Springs QC Report repository [INSERT LINK TO VERSIONED REPO] on Github.
 
 # Data Records
 The published product is one data package containing multiple CSV data files:
 
-* **`r params$dataPackage1Title`.** Comma-separated text files containing data from the MOJN I&M Desert Springs protocol. These data were compiled by the MOJN I&M and were last updated on `r format(Sys.Date(), '%B %d, %Y')`. Available at `r paste0("https://irma.nps.gov/DataStore/Reference/Profile/", params$dataPackage1RefID)`. 
+* [**`r params$dataPackage1Title`**](`r paste0("https://irma.nps.gov/DataStore/Reference/Profile/", params$dataPackage1RefID)`). Comma-separated text files containing data from the MOJN I&M Desert Springs protocol. These data were compiled by MOJN I&M and were last updated on `r format(Sys.Date(), '%B %d, %Y')`.
 
 Eighteen CSV data files contain raw values suitable for use with the MOJN I&M Desert Springs R package (Table 2).
 
@@ -492,7 +491,7 @@ tbl %>%
 
 # Data Quality Evaluation
 
-The data in the data package described above have been reviewed by staff in the NPS Inventory and Monitoring Division to ensure accuracy, completeness, and consistency with documented data quality standards, as well as for usability and reproducibility. For additional information on data quality standards for this protocol, refer to *Data Quality Standards for Springs in the Mojave Desert Network–Surface Water Monitoring at Desert Springs* (NPS/MOJN/NRR—2018/1819), available here: https://irma.nps.gov/DataStore/Reference/Profile/2257548.
+The data in the data package described above have been reviewed by staff in the NPS Inventory and Monitoring Division to ensure accuracy, completeness, and consistency with documented data quality standards, as well as for usability and reproducibility. For additional information on data quality standards for this protocol, refer to [*Data Quality Standards for Springs in the Mojave Desert Network–Surface Water Monitoring at Desert Springs*](https://irma.nps.gov/DataStore/Reference/Profile/2257548).
 
 ## Advice and Caveats
 
