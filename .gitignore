@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+MOJN-DS-DRR.html
 data/raw/
 data/final/
 dataPackages/DataPackageTemplate/*.nb.html
