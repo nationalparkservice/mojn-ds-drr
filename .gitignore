@@ -2,3 +2,12 @@
 .Rhistory
 .RData
 .Ruserdata
+MOJN-DS-DRR.html
+data/raw/
+data/final/
+dataPackages/DataPackageTemplate/*.nb.html
+dataPackages/DataPackageTemplate/metadata_templates/abstract.txt
+dataPackages/DataPackageTemplate/metadata_templates/methods.txt
+**/data_objects/*.csv
+**/eml/*.zip
+**/DS_DataPackage/*.nb.html

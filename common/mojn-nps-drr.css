@@ -1,0 +1,112 @@
+h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+  font-weight: 700;
+  line-height: 1.1;
+  color: black;
+}
+
+p.subtitle {
+    margin-top: .25em;
+    margin-bottom: .5em;
+    font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+    font-weight: 700;
+}
+
+.header-section-number {
+    color: black;
+}
+
+.navbar {
+  font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.navbar-brand {
+  padding-top: 0.5rem;
+  font-size: inherit;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+a {
+  color: #005998;
+  border-bottom-width: 2px;
+  border-bottom-style: dotted;
+  border-bottom-color: #87a7be;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #005998;
+  border-bottom-width: 2px;
+  border-bottom-style: dotted;
+  border-bottom-color: #87a7be;
+  text-decoration: none;
+}
+
+#logo {
+  float: right;
+}
+
+.sidebar nav[role=doc-toc]>ul li a {
+    line-height: 1.1rem;
+    padding-bottom: .2rem;
+    padding-top: .2rem;
+    color: black;
+    font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+    font-weight: 800;
+}
+
+.sidebar nav[role=doc-toc] ul>li>a.active {
+    border-left: 1px solid #4b5e26;
+    color: white !important;
+    background-color: #4b5e26;
+    font-weight: 800;
+    font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+}
+
+.sidebar nav[role=doc-toc] ul>li>ul>li>a.active {
+    border-left: 1px solid #4b5e26;
+    color: white !important;
+    background-color: #4b5e26;
+    font-weight: 800;
+    font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+}
+
+.nav-tabs .nav-link {
+    color: black;
+    margin-bottom: -1px;
+    background: none;
+    border: 1px solid transparent;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem
+    font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+}
+
+.nav-tabs .nav-link.active,.nav-tabs .nav-item.show .nav-link {
+    color: white;
+    background-color: #4b5e26;
+    border-color: #4b5e26;
+    font-weight: 800;
+    font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+}
+
+.nav-link:hover,.nav-link:focus {
+    color: black;
+    background-color: #C9CEBD;
+    font-weight: 800;
+    font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+}
+
+.sidebar nav[role=doc-toc]>h2,.sidebar nav[role=doc-toc]>.h2 {
+    margin-bottom: .5rem;
+    margin-top: .3rem;
+    border-bottom: 0;
+    padding-bottom: 0;
+    padding-top: 0px;
+    font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+    font-weight: 800;
+}
