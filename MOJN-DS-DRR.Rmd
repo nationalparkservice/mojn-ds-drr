@@ -15,9 +15,9 @@ params:
   isAccessible: "yes" # Either "yes" for a version that is screen-readable or "no" for a version with interactive table and plot formatting.
   wateryearStart: "2016"  # Enter the start and end year for data that you want this report to include by default (can be the same year)
   wateryearEnd: "2023"
-
 pagetitle: "MOJN DS QC 2016-2023"
 lang: "en"
+
 title: |
     | Mojave Desert Network Desert Springs Protocol
     | Data Quality Control Report `r params$reportNumber`
@@ -235,6 +235,7 @@ The following background information is summarized from the [*Springs in the Moj
 ## Significance
 
 Springs are water sources that form where groundwater reaches the land surface. They can range in size from seasonal seeps that go dry in the summer to perennial streams that flow all year long and support large wetland environments (Figure 1). Compared to the surrounding desert, spring and wetland environments in the Mojave and Great Basin regions support a greater abundance and diversity of plant and animal life. Large mammals, like desert bighorn sheep, depend on standing water to survive the heat of summer. Many birds depend on riparian habitat during their migratory seasons, and bats frequent open pools when foraging for insects. Some springs support rare or endemic species, including fish, amphibians, and aquatic invertebrates. Reliable water sources are scarce, so springs are often vital to the distribution and connectivity of wildlife habitat across the landscape.
+
 
 ``` {r figureold, eval = FALSE, echo = FALSE, fig.align = "left", fig.asp = 0.52}
 
@@ -503,9 +504,11 @@ The data in the data package described above have been reviewed by staff in the 
 - Due to the 35-day lapse in federal appropriations from late December 2018 to late January 2019, one annual spring in DEVA and both springs in CAMO were not monitored during WY2019.
 - Due to COVID-19 pandemic travel restrictions beginning in March 2020, monitoring of annual and 3-year springs was not completed in PARA during WY2020.
 - Due to COVID-19 pandemic travel restrictions from December 2020 to February 2021, monitoring of 3-year springs was not completed in DEVA during WY2021. Some annual springs were monitored later than usual during the field season, when field work was allowed to resume.
+
 - Beginning in WY2021, measurement of springbrook length was separated into continuous and discontinuous measurements. Previously, only continuous springbrook length was measured.
 
 ## General {.tabset .tabset-pills}
+
 
 ### Completeness 
 
@@ -589,6 +592,7 @@ notactive %>%
                         header = function(value) snakecase::to_title_case(value)))
 ```
 
+
 ### Not primary visits
 
 This table lists springs with any other combination of visit types other than one primary visit for each field season. Typically, if a spring is visited during a field season, then the spring should have one primary visit associated with it. Mistakes may occur when more than one visit to the same spring in the same field season is considered primary, or if no visits to a spring in a given field season are considered primary. This list also returns all springs that have supplemental, replicate, or dummy visits to allow the user to more easily check for mistakes.
@@ -608,6 +612,7 @@ notprimary %>%
                        resizable = TRUE,
                        defaultColDef = reactable::colDef(
                         header = function(value) snakecase::to_title_case(value)))
+
 ```
 
 ### Repeat visits
@@ -827,7 +832,6 @@ dpl.check %>%
 `r if(nrow(dpl.check) > 0){"The above records need to be reviewed and accepted before publication."}`
 
 ## Flow condition and water quantity {.tabset .tabset-pills}
-
 Water quantity is the master variable in spring environments. The amount, timing, and duration of discharge control the character and extent of different aquatic habitats, the abundance of wetland plants that can be supported, and the ability of wildlife to access water for drinking.
 
 ### Spring discharge summary
@@ -1000,6 +1004,7 @@ fillevents %>%
 This table lists visits where the volumetric method was used, but the median fill time was less than 5 seconds. Typically, fill times should be greater than 5 seconds to provide sufficient accuracy and precision.
 
 ``` {r filltimes, fig.cap = capTab("Volumetric discharge measurements with median fill time less than five seconds.")}
+
 filltimes <- qcVolumetricTimes(field.season = year.range)
 
 filltimes %>%
@@ -1020,6 +1025,7 @@ filltimes %>%
 This table lists visits where continuous surface water length is greater than discontinuous surface water length. This results from error during data entry.
 
 ``` {r continuouslength, fig.cap = capTab("Continuous surface water length greater than discontinuous surface water length.")}
+
 continuouslength <- qcContinuousLength(field.season = year.range)
 
 continuouslength %>%
@@ -1040,8 +1046,10 @@ continuouslength %>%
 This table summarizes flow categories for the continuous portion of springbrooks.
 
 ``` {r flowcatcon, fig.cap = capTab("Flow category summaries for the continuous portion of springbrooks at each park.")}
+
 flowcatcon <- FlowCategoriesContinuous(field.season = year.range) %>%
   dplyr::select(-Panel)
+
 
 flowcatcon %>%
   reactable::reactable(
@@ -1061,6 +1069,7 @@ flowcatcon %>%
 This table summarizes flow categories for the discontinuous portion of springbrooks, where springbrook lengths are discontinuous, and the continuous portion of springbrooks, where springbrook lengths are continuous.
 
 ``` {r flowcatdiscon, fig.cap = capTab("Flow category summaries for the discontinuous portion of springbrooks at each park.")}
+
 flowcatdiscon <- FlowCategoriesDiscontinuous(field.season = year.range) %>%
   dplyr::select(-Panel)
 
@@ -1145,6 +1154,7 @@ if (params$isAccessible == "yes") {
 }
 ```
 
+
 ``` {r flowcatannualheatmap.3, fig.height = 3, fig.cap = capFig("Heatmap of flow categories at annual springs in LAKE."), fig.alt = "Annual springs in Lake Mead appear wetter in 2016 possibly due to the later timing of the visits during that field season."}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "LAKE", field.season = year.range)
 
@@ -1155,6 +1165,7 @@ if (params$isAccessible == "yes") {
     layout_ggplotly(x = 0, y = -0.05)
 }
 ```
+
 
 ``` {r flowcatannualheatmap.4, fig.height = 3, fig.cap = capFig("Heatmap of flow categories at annual springs in MOJA."), fig.alt = "Annual springs in Mojave show the most variability in being wet or dry from year to year."}
 flowcatannualheatmap <- FlowCategoriesAnnualHeatMap(park = "MOJA", field.season = year.range)

@@ -10,3 +10,4 @@ dataPackages/DataPackageTemplate/metadata_templates/methods.txt
 **/data_objects/*.csv
 **/eml/*.zip
 **/DS_DataPackage/*.nb.html
+
